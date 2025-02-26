@@ -40,13 +40,13 @@ author:
     email: hkotni@juniper.net
 
 normative:
-RFC5440:
-RFC8231:
-RFC8664:
+    RFC5440:
+    RFC8231:
+    RFC8664:
 
 informative:
-I-D.draft-koldychev-pce-operational:
-I-D.ietf-pce-segment-routing-ipv6:
+    I-D.draft-koldychev-pce-operational:
+    RFC9603:
 
 --- abstract
 
@@ -140,10 +140,10 @@ FLAG=UP, PLSP-ID=100, LSP-ID=0, ERO={A}).
 
 # Use of SR-RRO and SRv6-RRO objects
 
-[RFC8231] defines a PCRpt message which contains <\intended-path>
-known as the ERO object and <\actual-path> known as the RRO object.
+[RFC8231] defines a PCRpt message which contains `<intended-path>`
+known as the ERO object and `<actual-path>` known as the RRO object.
 [RFC8664] defines SR-ERO and SR-RRO sub-objects for SR-TE LSPs.
-[I-D.ietf-pce-segment-routing-ipv6] further defines SRv6-ERO and
+[RFC9603] further defines SRv6-ERO and
 SRv6-RRO sub-objects for SRv6-TE paths.
 
 In practice RRO data is the result of signalling via a protocol such
@@ -157,7 +157,8 @@ the same, therefore some implementations have omitted the RRO when
 reporting a SR-TE LSP while others continue to send both ERO and RRO
 values.
 
-The following applies to SR-TE only.  If both ERO and RRO are present
+This document updates [RFC8664] by clarifying and relaxing requirement for
+both an ERO and RRO object to exist for SR-TE paths. If both ERO and RRO are present
 for the same LSP, it SHOULD be interpreted as the RRO being the
 actual path the LSP is taking but MAY interpret only the ERO as the
 actual path.  In the absence of RRO a PCE MUST interpret the ERO as
