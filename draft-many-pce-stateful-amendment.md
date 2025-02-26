@@ -10,19 +10,19 @@ number:
 date: {DATE}
 consensus: true
 v: 3
-area: "Routing"
-workgroup: "PCE Working Group"
+area: ""
+workgroup: "Path Computation Element"
 keyword:
  - next generation
  - unicorn
  - sparkling distributed ledger
 venue:
-  group: PCE WG
-  type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
-  github: USER/REPO
-  latest: https://example.com/LATEST
+  group: "Path Computation Element"
+  type: ""
+  mail: "pce@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/pce/"
+  github: "astone282/draft-many-pce-stateful-amendment"
+  latest: "https://astone282.github.io/draft-many-pce-stateful-amendment/draft-many-pce-stateful-amendment.html"
 
 author:
  -
