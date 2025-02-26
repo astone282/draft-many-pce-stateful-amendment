@@ -64,7 +64,9 @@ Table of Contents
    4.  Security Considerations
    5.  Managability Considerations
    6.  IANA Considerations
-   7.  Normative References
+   7.  References
+     7.1.  Normative References
+     7.2.  Informative References
    Acknowledgments
    Contributors
    Authors' Addresses
@@ -85,10 +87,11 @@ Table of Contents
    document serves as an update to [RFC8664] to permit the exclusion of
    the RRO object for Segment Routed paths
 
-   Note: the content in this document originated from [I-D.draft-
-   koldychev-pce-operational] version 07, which has been branched to
-   become a standards updating document while [I-D.draft-koldychev-pce-
-   operational] is to become an informational document.
+   Note: the content in this document originated from
+   [I-D.draft-koldychev-pce-operational] version 07, which has been
+   branched to become a standards updating document while
+   [I-D.draft-koldychev-pce-operational] is to become an informational
+   document.
 
 1.1.  Requirements Language
 
@@ -171,11 +174,11 @@ Table of Contents
 
 3.  Use of SR-RRO and SRv6-RRO objects
 
-   [RFC8231] defines a PCRpt message which contains <\intended-path>
-   known as the ERO object and <\actual-path> known as the RRO object.
-   [RFC8664] defines SR-ERO and SR-RRO sub-objects for SR-TE LSPs.  [I-
-   D.ietf-pce-segment-routing-ipv6] further defines SRv6-ERO and
-   SRv6-RRO sub-objects for SRv6-TE paths.
+   [RFC8231] defines a PCRpt message which contains <intended-path>
+   known as the ERO object and <actual-path> known as the RRO object.
+   [RFC8664] defines SR-ERO and SR-RRO sub-objects for SR-TE LSPs.
+   [RFC9603] further defines SRv6-ERO and SRv6-RRO sub-objects for
+   SRv6-TE paths.
 
    In practice RRO data is the result of signalling via a protocol such
    as RSVP-TE, which allows collection of per-hop information along the
@@ -188,13 +191,14 @@ Table of Contents
    reporting a SR-TE LSP while others continue to send both ERO and RRO
    values.
 
-   The following applies to SR-TE only.  If both ERO and RRO are present
-   for the same LSP, it SHOULD be interpreted as the RRO being the
-   actual path the LSP is taking but MAY interpret only the ERO as the
-   actual path.  In the absence of RRO a PCE MUST interpret the ERO as
-   the actual path for the LSP.  Until SR-TE introduces some form of
-   signaling similar to RSVP-TE, the use of RRO is discouraged for SR-TE
-   LSPs.
+   This document updates [RFC8664] by clarifying and relaxing
+   requirement for both an ERO and RRO object to exist for SR-TE paths.
+   If both ERO and RRO are present for the same LSP, it SHOULD be
+   interpreted as the RRO being the actual path the LSP is taking but
+   MAY interpret only the ERO as the actual path.  In the absence of RRO
+   a PCE MUST interpret the ERO as the actual path for the LSP.  Until
+   SR-TE introduces some form of signaling similar to RSVP-TE, the use
+   of RRO is discouraged for SR-TE LSPs.
 
 4.  Security Considerations
 
@@ -208,16 +212,51 @@ Table of Contents
 
    This document has no IANA actions.
 
-7.  Normative References
+7.  References
+
+7.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
 
+   [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
+              Element (PCE) Communication Protocol (PCEP)", RFC 5440,
+              DOI 10.17487/RFC5440, March 2009,
+              <https://www.rfc-editor.org/rfc/rfc5440>.
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8231]  Crabbe, E., Minei, I., Medved, J., and R. Varga, "Path
+              Computation Element Communication Protocol (PCEP)
+              Extensions for Stateful PCE", RFC 8231,
+              DOI 10.17487/RFC8231, September 2017,
+              <https://www.rfc-editor.org/rfc/rfc8231>.
+
+   [RFC8664]  Sivabalan, S., Filsfils, C., Tantsura, J., Henderickx, W.,
+              and J. Hardwick, "Path Computation Element Communication
+              Protocol (PCEP) Extensions for Segment Routing", RFC 8664,
+              DOI 10.17487/RFC8664, December 2019,
+              <https://www.rfc-editor.org/rfc/rfc8664>.
+
+7.2.  Informative References
+
+   [I-D.draft-koldychev-pce-operational]
+              Koldychev, M., Sivabalan, S., Peng, S., Achaval, D., and
+              H. Kotni, "PCEP Operational Clarification", Work in
+              Progress, Internet-Draft, draft-koldychev-pce-operational-
+              07, 4 January 2023,
+              <https://datatracker.ietf.org/doc/html/draft-koldychev-
+              pce-operational-07>.
+
+   [RFC9603]  Li, C., Ed., Kaladharan, P., Sivabalan, S., Koldychev, M.,
+              and Y. Zhu, "Path Computation Element Communication
+              Protocol (PCEP) Extensions for IPv6 Segment Routing",
+              RFC 9603, DOI 10.17487/RFC9603, July 2024,
+              <https://www.rfc-editor.org/rfc/rfc9603>.
 
 Acknowledgments
 

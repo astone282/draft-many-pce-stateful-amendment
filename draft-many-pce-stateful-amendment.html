@@ -1185,7 +1185,15 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
@@ -1205,14 +1213,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">The PCEP protocol has evolved from a stateless protocol [RFC5440] to a stateful protocol [RFC8231], incorporating numerous extensions.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-1">The PCEP protocol has evolved from a stateless protocol <span>[<a href="#RFC5440" class="cite xref">RFC5440</a>]</span> to a stateful protocol <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span>, incorporating numerous extensions.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">During interoperability testing it was observed that various implementations have implemented optimizations in the protocol.
-This document serves to optimize the original procedure in [RFC8231] to optionally drop the PCReq and PCReply exchange, which
+This document serves to optimize the original procedure in <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span> to optionally drop the PCReq and PCReply exchange, which
 greatly simplifies implementation and optimizes the protocol.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">In addition, [RFC8664] introduced extensions for Segment Routing and the encoding of segments in the ERO and RRO objects in PCEP.
-This document serves as an update to [RFC8664] to permit the exclusion of the RRO object for Segment Routed paths<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">Note: the content in this document originated from [I-D.draft-koldychev-pce-operational] version 07, which has been branched
-to become a standards updating document while [I-D.draft-koldychev-pce-operational] is to become an informational document.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-3">In addition, <span>[<a href="#RFC8664" class="cite xref">RFC8664</a>]</span> introduced extensions for Segment Routing and the encoding of segments in the ERO and RRO objects in PCEP.
+This document serves as an update to <span>[<a href="#RFC8664" class="cite xref">RFC8664</a>]</span> to permit the exclusion of the RRO object for Segment Routed paths<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">Note: the content in this document originated from <span>[<a href="#I-D.draft-koldychev-pce-operational" class="cite xref">I-D.draft-koldychev-pce-operational</a>]</span> version 07, which has been branched
+to become a standards updating document while <span>[<a href="#I-D.draft-koldychev-pce-operational" class="cite xref">I-D.draft-koldychev-pce-operational</a>]</span> is to become an informational document.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <div id="requirements-language">
 <section id="section-1.1">
         <h3 id="name-requirements-language">
@@ -1231,7 +1239,7 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
       <h2 id="name-stateful-bringup">
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-stateful-bringup" class="section-name selfRef">Stateful Bringup</a>
       </h2>
-<p id="section-2-1">[RFC8231] Section 5.8.2, allows delegation of an LSP in operationally
+<p id="section-2-1"><span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span> Section 5.8.2, allows delegation of an LSP in operationally
 down state, but at the same time mandates the use of PCReq, before
 sending PCRpt.  In this document, we would like to make it clear that
 sending PCReq is optional.<a href="#section-2-1" class="pilcrow">¶</a></p>
@@ -1241,9 +1249,9 @@ overhead and is not possible to enforce from the PCE, because the
 stateless PCE is not required to keep any per-LSP state about
 previous PCReq messages.  It was found that many vendors choose to
 ignore this requirement and send the PCRpt directly, without going
-through PCReq.  Even though this behavior is against [RFC8231], it
+through PCReq.  Even though this behavior is against <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span>, it
 offers some advantages and simplifications, as will be explained in
-this section.  This document therefore updates [RFC8231].<a href="#section-2-2" class="pilcrow">¶</a></p>
+this section.  This document therefore updates <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
 <p id="section-2-3">Even though all the major vendors today are moving to the stateful
 PCE model, it does not deprecate the need for stateless PCEP.  The
 key property of stateless PCEP is that PCReq messages do not modify
@@ -1256,10 +1264,10 @@ LSPs.<a href="#section-2-3" class="pilcrow">¶</a></p>
         <h3 id="name-updates-to-rfc-8231">
 <a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-updates-to-rfc-8231" class="section-name selfRef">Updates to RFC 8231</a>
         </h3>
-<p id="section-2.1-1">[RFC8231] Section 5.8.2, says "The only explicit way for a PCC to
+<p id="section-2.1-1"><span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span> Section 5.8.2, says "The only explicit way for a PCC to
 request a path from the PCE is to send a PCReq message.  The PCRpt
 message <span class="bcp14">MUST NOT</span> be used by the PCC to attempt to request a path from
-the PCE."  In this document we update [RFC8231] to remove the quoted
+the PCE."  In this document we update <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span> to remove the quoted
 text.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 <p id="section-2.1-2">As part of the new bringup procedure, the PCC <span class="bcp14">MAY</span> delegate an empty
 LSP (no ERO or empty ERO) to the PCE and then wait for the PCE to
@@ -1324,10 +1332,10 @@ FLAG=UP, PLSP-ID=100, LSP-ID=0, ERO={A}).<a href="#section-2.1-6" class="pilcrow
       <h2 id="name-use-of-sr-rro-and-srv6-rro-">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-use-of-sr-rro-and-srv6-rro-" class="section-name selfRef">Use of SR-RRO and SRv6-RRO objects</a>
       </h2>
-<p id="section-3-1">[RFC8231] defines a PCRpt message which contains &lt;\intended-path&gt;
-known as the ERO object and &lt;\actual-path&gt; known as the RRO object.
-[RFC8664] defines SR-ERO and SR-RRO sub-objects for SR-TE LSPs.
-[I-D.ietf-pce-segment-routing-ipv6] further defines SRv6-ERO and
+<p id="section-3-1"><span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span> defines a PCRpt message which contains <code>&lt;intended-path&gt;</code>
+known as the ERO object and <code>&lt;actual-path&gt;</code> known as the RRO object.
+<span>[<a href="#RFC8664" class="cite xref">RFC8664</a>]</span> defines SR-ERO and SR-RRO sub-objects for SR-TE LSPs.
+<span>[<a href="#RFC9603" class="cite xref">RFC9603</a>]</span> further defines SRv6-ERO and
 SRv6-RRO sub-objects for SRv6-TE paths.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">In practice RRO data is the result of signalling via a protocol such
 as RSVP-TE, which allows collection of per-hop information along the
@@ -1339,7 +1347,8 @@ SR-ERO/SRv6-ERO and SR-RRO/SRv6-RRO (respectively) are in practice
 the same, therefore some implementations have omitted the RRO when
 reporting a SR-TE LSP while others continue to send both ERO and RRO
 values.<a href="#section-3-2" class="pilcrow">¶</a></p>
-<p id="section-3-3">The following applies to SR-TE only.  If both ERO and RRO are present
+<p id="section-3-3">This document updates <span>[<a href="#RFC8664" class="cite xref">RFC8664</a>]</span> by clarifying and relaxing requirement for
+both an ERO and RRO object to exist for SR-TE paths. If both ERO and RRO are present
 for the same LSP, it <span class="bcp14">SHOULD</span> be interpreted as the RRO being the
 actual path the LSP is taking but <span class="bcp14">MAY</span> interpret only the ERO as the
 actual path.  In the absence of RRO a PCE <span class="bcp14">MUST</span> interpret the ERO as
@@ -1372,21 +1381,57 @@ LSPs.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <p id="section-6-1">This document has no IANA actions.<a href="#section-6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="sec-normative-references">
+<div id="sec-combined-references">
 <section id="section-7">
-      <h2 id="name-normative-references">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+      <h2 id="name-references">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
+<div id="sec-normative-references">
+<section id="section-7.1">
+        <h3 id="name-normative-references">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
 <dl class="references">
 <dt id="RFC2119">[RFC2119]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC5440">[RFC5440]</dt>
+        <dd>
+<span class="refAuthor">Vasseur, JP., Ed.</span> and <span class="refAuthor">JL. Le Roux, Ed.</span>, <span class="refTitle">"Path Computation Element (PCE) Communication Protocol (PCEP)"</span>, <span class="seriesInfo">RFC 5440</span>, <span class="seriesInfo">DOI 10.17487/RFC5440</span>, <time datetime="2009-03" class="refDate">March 2009</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5440">https://www.rfc-editor.org/rfc/rfc5440</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
-    <dd>
+        <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC8231">[RFC8231]</dt>
+        <dd>
+<span class="refAuthor">Crabbe, E.</span>, <span class="refAuthor">Minei, I.</span>, <span class="refAuthor">Medved, J.</span>, and <span class="refAuthor">R. Varga</span>, <span class="refTitle">"Path Computation Element Communication Protocol (PCEP) Extensions for Stateful PCE"</span>, <span class="seriesInfo">RFC 8231</span>, <span class="seriesInfo">DOI 10.17487/RFC8231</span>, <time datetime="2017-09" class="refDate">September 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8231">https://www.rfc-editor.org/rfc/rfc8231</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8664">[RFC8664]</dt>
+      <dd>
+<span class="refAuthor">Sivabalan, S.</span>, <span class="refAuthor">Filsfils, C.</span>, <span class="refAuthor">Tantsura, J.</span>, <span class="refAuthor">Henderickx, W.</span>, and <span class="refAuthor">J. Hardwick</span>, <span class="refTitle">"Path Computation Element Communication Protocol (PCEP) Extensions for Segment Routing"</span>, <span class="seriesInfo">RFC 8664</span>, <span class="seriesInfo">DOI 10.17487/RFC8664</span>, <time datetime="2019-12" class="refDate">December 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8664">https://www.rfc-editor.org/rfc/rfc8664</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 </dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-7.2">
+        <h3 id="name-informative-references">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="I-D.draft-koldychev-pce-operational">[I-D.draft-koldychev-pce-operational]</dt>
+        <dd>
+<span class="refAuthor">Koldychev, M.</span>, <span class="refAuthor">Sivabalan, S.</span>, <span class="refAuthor">Peng, S.</span>, <span class="refAuthor">Achaval, D.</span>, and <span class="refAuthor">H. Kotni</span>, <span class="refTitle">"PCEP Operational Clarification"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-koldychev-pce-operational-07</span>, <time datetime="2023-01-04" class="refDate">4 January 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-koldychev-pce-operational-07">https://datatracker.ietf.org/doc/html/draft-koldychev-pce-operational-07</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9603">[RFC9603]</dt>
+      <dd>
+<span class="refAuthor">Li, C., Ed.</span>, <span class="refAuthor">Kaladharan, P.</span>, <span class="refAuthor">Sivabalan, S.</span>, <span class="refAuthor">Koldychev, M.</span>, and <span class="refAuthor">Y. Zhu</span>, <span class="refTitle">"Path Computation Element Communication Protocol (PCEP) Extensions for IPv6 Segment Routing"</span>, <span class="seriesInfo">RFC 9603</span>, <span class="seriesInfo">DOI 10.17487/RFC9603</span>, <time datetime="2024-07" class="refDate">July 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9603">https://www.rfc-editor.org/rfc/rfc9603</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
 </section>
 </div>
 <div id="acknowledgments">
@@ -1394,7 +1439,7 @@ LSPs.<a href="#section-3-3" class="pilcrow">¶</a></p>
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">The authors would like to thank Adrian Farrel for useful review comments on [I-D.draft-koldychev-pce-operational]
+<p id="appendix-A-1">The authors would like to thank Adrian Farrel for useful review comments on <span>[<a href="#I-D.draft-koldychev-pce-operational" class="cite xref">I-D.draft-koldychev-pce-operational</a>]</span>
 which have been carried over and have been applied into this document.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
 </div>
