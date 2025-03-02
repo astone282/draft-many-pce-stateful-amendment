@@ -31,13 +31,9 @@ author:
     organization: Nokia
     email: diego.achaval@nokia.com
 -
-    fullname: Shuping Peng
-    organization: Huawei Technologies
-    email: pengshuping@huawei.com
--
-    fullname: Hari Kotni
-    organization: Huawei Technologies
-    email: hkotni@juniper.net
+    fullname: Samuel Sidor
+    organization: Cisco
+    email: ssidor@cisco.com
 
 normative:
     RFC5440:
@@ -185,20 +181,3 @@ This document has no IANA actions.
 {:numbered="false"}
 The authors would like to thank Adrian Farrel for useful review comments on [I-D.draft-koldychev-pce-operational]
 which have been carried over and have been applied into this document.
-
-# Contributors
-{:numbered="false"}
-
-~~~
-Dhruv Dhody
-Huawei Technologies
-Email: dhruv.ietf@gmail.com
-
-Samuel Sidor
-Cisco Systems
-Email: ssidor@cisco.com
-
-Mahendra Singh Negi
-RtBrick Inc
-Email: mahend.ietf@gmail.com
-~~~
