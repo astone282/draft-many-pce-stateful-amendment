@@ -6,12 +6,14 @@ PCE Working Group                                         A. S. (Editor)
 Internet-Draft                                                     Nokia
 Updates: 8231, 8664 (if approved)                           M. Koldychev
 Intended status: Standards Track                            S. Sivabalan
-Expires: 3 September 2025                                          Ciena
+Expires: 4 September 2025                                          Ciena
                                                               D. Achavel
                                                                    Nokia
+                                                                H. Kotni
+                                                   Juniper Networks, Inc
                                                                 S. Sidor
                                                                    Cisco
-                                                            2 March 2025
+                                                            3 March 2025
 
 
         Amendments to Stateful PCE Communication Protocol (PCEP)
@@ -37,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 September 2025.
+   This Internet-Draft will expire on 4 September 2025.
 
 Copyright Notice
 
@@ -243,12 +245,12 @@ Table of Contents
 7.2.  Informative References
 
    [I-D.draft-koldychev-pce-operational]
-              Koldychev, M., Sivabalan, S., Peng, S., Achaval, D., and
-              H. Kotni, "PCEP Operational Clarification", Work in
-              Progress, Internet-Draft, draft-koldychev-pce-operational-
-              07, 4 January 2023,
+              Koldychev, M., Sivabalan, S., Peng, S., Achaval, D.,
+              Kotni, H., and A. Stone, "PCEP Operational Clarification",
+              Work in Progress, Internet-Draft, draft-koldychev-pce-
+              operational-08, 2 March 2025,
               <https://datatracker.ietf.org/doc/html/draft-koldychev-
-              pce-operational-07>.
+              pce-operational-08>.
 
    [RFC9603]  Li, C., Ed., Kaladharan, P., Sivabalan, S., Koldychev, M.,
               and Y. Zhu, "Path Computation Element Communication
@@ -282,6 +284,11 @@ Authors' Addresses
    Diego Achavel
    Nokia
    Email: diego.achaval@nokia.com
+
+
+   Hari Kotni
+   Juniper Networks, Inc
+   Email: hkotni@juniper.net
 
 
    Samuel Sidor
