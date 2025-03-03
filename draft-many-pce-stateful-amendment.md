@@ -31,6 +31,10 @@ author:
     organization: Nokia
     email: diego.achaval@nokia.com
 -
+    fullname: Hari Kotni
+    organization: Juniper Networks, Inc
+    email: hkotni@juniper.net
+-
     fullname: Samuel Sidor
     organization: Cisco
     email: ssidor@cisco.com
