@@ -31,6 +31,10 @@ author:
     organization: Nokia
     email: diego.achaval@nokia.com
 -
+    fullname: Shuping Peng
+    organization: Huawei Technologies
+    email: pengshuping@huawei.com
+-
     fullname: Hari Kotni
     organization: Juniper Networks, Inc
     email: hkotni@juniper.net
