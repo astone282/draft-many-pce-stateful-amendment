@@ -6,14 +6,16 @@ PCE Working Group                                         A. S. (Editor)
 Internet-Draft                                                     Nokia
 Updates: 8231, 8664 (if approved)                           M. Koldychev
 Intended status: Standards Track                            S. Sivabalan
-Expires: 4 September 2025                                          Ciena
+Expires: 6 September 2025                                          Ciena
                                                               D. Achavel
                                                                    Nokia
+                                                                 S. Peng
+                                                     Huawei Technologies
                                                                 H. Kotni
                                                    Juniper Networks, Inc
                                                                 S. Sidor
                                                                    Cisco
-                                                            3 March 2025
+                                                            5 March 2025
 
 
         Amendments to Stateful PCE Communication Protocol (PCEP)
@@ -39,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 September 2025.
+   This Internet-Draft will expire on 6 September 2025.
 
 Copyright Notice
 
@@ -284,6 +286,11 @@ Authors' Addresses
    Diego Achavel
    Nokia
    Email: diego.achaval@nokia.com
+
+
+   Shuping Peng
+   Huawei Technologies
+   Email: pengshuping@huawei.com
 
 
    Hari Kotni
