@@ -1,0 +1,303 @@
+
+
+
+
+PCE Working Group                                         A. S. (Editor)
+Internet-Draft                                                     Nokia
+Updates: 8231, 8664 (if approved)                           M. Koldychev
+Intended status: Standards Track                            S. Sivabalan
+Expires: 29 September 2025                                         Ciena
+                                                              D. Achavel
+                                                                   Nokia
+                                                                 S. Peng
+                                                     Huawei Technologies
+                                                                H. Kotni
+                                                   Juniper Networks, Inc
+                                                                S. Sidor
+                                                                   Cisco
+                                                           28 March 2025
+
+
+        Amendments to Stateful PCE Communication Protocol (PCEP)
+                draft-many-pce-stateful-amendment-latest
+
+Abstract
+
+   This document updates RFC8231 and RFC8664 to reflect operationalized
+   implementations and define optimizations in the PCEP protocol.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 29 September 2025.
+
+Copyright Notice
+
+   Copyright (c) 2025 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+     1.1.  Requirements Language
+   2.  Stateful Bringup
+     2.1.  Updates to RFC 8231
+   3.  Use of SR-RRO and SRv6-RRO objects
+   4.  Security Considerations
+   5.  Managability Considerations
+   6.  IANA Considerations
+   7.  References
+     7.1.  Normative References
+     7.2.  Informative References
+   Acknowledgments
+   Authors' Addresses
+
+1.  Introduction
+
+   The PCEP protocol has evolved from a stateless protocol [RFC5440] to
+   a stateful protocol [RFC8231], incorporating numerous extensions.
+
+   During interoperability testing it was observed that various
+   implementations have implemented optimizations in the protocol.  This
+   document serves to optimize the original procedure in [RFC8231] to
+   optionally drop the PCReq and PCReply exchange, which greatly
+   simplifies implementation and optimizes the protocol.
+
+   In addition, [RFC8664] introduced extensions for Segment Routing and
+   the encoding of segments in the ERO and RRO objects in PCEP.  This
+   document serves as an update to [RFC8664] to permit the exclusion of
+   the RRO object for Segment Routed paths
+
+   Note: the content in this document originated from
+   [I-D.draft-koldychev-pce-operational] version 07, which has been
+   branched to become a standards updating document while
+   [I-D.draft-koldychev-pce-operational] is to become an informational
+   document.
+
+1.1.  Requirements Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+2.  Stateful Bringup
+
+   [RFC8231] Section 5.8.2, allows delegation of an LSP in operationally
+   down state, but at the same time mandates the use of PCReq, before
+   sending PCRpt.  In this document, we would like to make it clear that
+   sending PCReq is optional.
+
+   We shall refer to the process of sending PCReq before PCRpt as
+   "stateless bringup".  In reality, stateless bringup introduces
+   overhead and is not possible to enforce from the PCE, because the
+   stateless PCE is not required to keep any per-LSP state about
+   previous PCReq messages.  It was found that many vendors choose to
+   ignore this requirement and send the PCRpt directly, without going
+   through PCReq.  Even though this behavior is against [RFC8231], it
+   offers some advantages and simplifications, as will be explained in
+   this section.  This document therefore updates [RFC8231].
+
+   Even though all the major vendors today are moving to the stateful
+   PCE model, it does not deprecate the need for stateless PCEP.  The
+   key property of stateless PCEP is that PCReq messages do not modify
+   the state of the PCE LSP-DB.  Therefore, PCReq messages are useful
+   for many OAM ping/traceroute applications where the PCC wishes to
+   probe the network topology without having any effect on the existing
+   LSPs.
+
+2.1.  Updates to RFC 8231
+
+   [RFC8231] Section 5.8.2, says "The only explicit way for a PCC to
+   request a path from the PCE is to send a PCReq message.  The PCRpt
+   message MUST NOT be used by the PCC to attempt to request a path from
+   the PCE."  In this document we update [RFC8231] to remove the quoted
+   text.
+
+   As part of the new bringup procedure, the PCC MAY delegate an empty
+   LSP (no ERO or empty ERO) to the PCE and then wait for the PCE to
+   send PCUpd, without sending PCReq.  We shall refer to this process as
+   "stateful bringup".  The PCE MUST support the original stateless
+   bringup, for backward compatibility purposes.  Supporting stateful
+   bringup should not require introducing any new behavior on the PCE,
+   because as mentioned earlier, the PCE does not modify LSP-DB state
+   based on PCReq messages.  So whether the PCE has received a PCReq or
+   not, it would process the PCRpt all the same.
+
+   An example of stateful bringup follows.  In our example the PCC
+   starts off by using LSP-ID of 0.  The value 0 does not hold any
+   special meaning, any other 16-bit value could have been used.
+
+   PCC has no LSP yet, but wants to establish a path.  PCC sends
+   PCRpt(R-FLAG=0, D-flag=1, OPER-FLAG=DOWN, PLSP-ID=100, LSP-ID=0,
+   ERO={}).
+
+         +=============+========================================+
+         | TUNNEL      |                  LSP                   |
+         +=============+========================================+
+         | PLSP-ID=100 | OLSP-ID=0, D-flag=1, OPER=DOWN, ERO={} |
+         +-------------+----------------------------------------+
+
+               Table 1: Content of LSP DB after first PcRpt
+
+   PCC received a PCUpd from the PCE and has decided to install the
+   ERO={A} from that PCUpd.  PCC sends PCRpt(R-FLAG=0, D-flag=1, OPER-
+   FLAG=UP, PLSP-ID=100, LSP-ID=0, ERO={A}).
+
+          +=============+======================================+
+          | TUNNEL      |                 LSP                  |
+          +=============+======================================+
+          | PLSP-ID=100 | LSP-ID=0, D-flag=1, OPER=UP, ERO={A} |
+          +-------------+--------------------------------------+
+
+                  Table 2: Content of LSP DB after PcUpd
+
+3.  Use of SR-RRO and SRv6-RRO objects
+
+   [RFC8231] defines a PCRpt message which contains <intended-path>
+   known as the ERO object and <actual-path> known as the RRO object.
+   [RFC8664] defines SR-ERO and SR-RRO sub-objects for SR-TE LSPs.
+   [RFC9603] further defines SRv6-ERO and SRv6-RRO sub-objects for
+   SRv6-TE paths.
+
+   In practice RRO data is the result of signalling via a protocol such
+   as RSVP-TE, which allows collection of per-hop information along the
+   path.  The ERO and RRO values may be different as the path encoded in
+   the ERO may differ than the RRO such as during protection conditions
+   or if the ERO contains loose hops which are expanded upon.  As
+   Segment Routing LSP does not perform any signalling, the values of an
+   SR-ERO/SRv6-ERO and SR-RRO/SRv6-RRO (respectively) are in practice
+   the same, therefore some implementations have omitted the RRO when
+   reporting a SR-TE LSP while others continue to send both ERO and RRO
+   values.
+
+   This document updates [RFC8664] by clarifying and relaxing
+   requirement for both an ERO and RRO object to exist for SR-TE paths.
+   If both ERO and RRO are present for the same LSP, it SHOULD be
+   interpreted as the RRO being the actual path the LSP is taking but
+   MAY interpret only the ERO as the actual path.  In the absence of RRO
+   a PCE MUST interpret the ERO as the actual path for the LSP.  Until
+   SR-TE introduces some form of signaling similar to RSVP-TE, the use
+   of RRO is discouraged for SR-TE LSPs.
+
+4.  Security Considerations
+
+   TODO
+
+5.  Managability Considerations
+
+   TODO
+
+6.  IANA Considerations
+
+   This document has no IANA actions.
+
+7.  References
+
+7.1.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
+              Element (PCE) Communication Protocol (PCEP)", RFC 5440,
+              DOI 10.17487/RFC5440, March 2009,
+              <https://www.rfc-editor.org/rfc/rfc5440>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8231]  Crabbe, E., Minei, I., Medved, J., and R. Varga, "Path
+              Computation Element Communication Protocol (PCEP)
+              Extensions for Stateful PCE", RFC 8231,
+              DOI 10.17487/RFC8231, September 2017,
+              <https://www.rfc-editor.org/rfc/rfc8231>.
+
+   [RFC8664]  Sivabalan, S., Filsfils, C., Tantsura, J., Henderickx, W.,
+              and J. Hardwick, "Path Computation Element Communication
+              Protocol (PCEP) Extensions for Segment Routing", RFC 8664,
+              DOI 10.17487/RFC8664, December 2019,
+              <https://www.rfc-editor.org/rfc/rfc8664>.
+
+7.2.  Informative References
+
+   [I-D.draft-koldychev-pce-operational]
+              Koldychev, M., Sivabalan, S., Peng, S., Achaval, D.,
+              Kotni, H., and A. Stone, "PCEP Operational Clarification",
+              Work in Progress, Internet-Draft, draft-koldychev-pce-
+              operational-09, 28 March 2025,
+              <https://datatracker.ietf.org/doc/html/draft-koldychev-
+              pce-operational-09>.
+
+   [RFC9603]  Li, C., Ed., Kaladharan, P., Sivabalan, S., Koldychev, M.,
+              and Y. Zhu, "Path Computation Element Communication
+              Protocol (PCEP) Extensions for IPv6 Segment Routing",
+              RFC 9603, DOI 10.17487/RFC9603, July 2024,
+              <https://www.rfc-editor.org/rfc/rfc9603>.
+
+Acknowledgments
+
+   The authors would like to thank Adrian Farrel for useful review
+   comments on [I-D.draft-koldychev-pce-operational] which have been
+   carried over and have been applied into this document.
+
+Authors' Addresses
+
+   Andrew Stone (Editor)
+   Nokia
+   Email: andrew.stone@nokia.com
+
+
+   Mike Koldychev
+   Ciena
+   Email: mkoldych@proton.me
+
+
+   Siva Sivabalan
+   Ciena
+   Email: ssivabal@ciena.com
+
+
+   Diego Achavel
+   Nokia
+   Email: diego.achaval@nokia.com
+
+
+   Shuping Peng
+   Huawei Technologies
+   Email: pengshuping@huawei.com
+
+
+   Hari Kotni
+   Juniper Networks, Inc
+   Email: hkotni@juniper.net
+
+
+   Samuel Sidor
+   Cisco
+   Email: ssidor@cisco.com
