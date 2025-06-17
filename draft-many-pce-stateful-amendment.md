@@ -67,10 +67,7 @@ This document serves to optimize the original procedure in [RFC8231] to optional
 greatly simplifies implementation and optimizes the protocol.
 
 In addition, [RFC8664] introduced extensions for Segment Routing and the encoding of segments in the ERO and RRO objects in PCEP.
-This document serves as an update to [RFC8664] to permit the exclusion of the RRO object for Segment Routed paths
-
-Note: the content in this document originated from [I-D.draft-koldychev-pce-operational] version 07, which has been branched
-to become a standards updating document while [I-D.draft-koldychev-pce-operational] is to become an informational document.
+This document serves as an update to [RFC8664] to permit the exclusion of the RRO object for Segment Routed paths.
 
 ## Requirements Language
 
@@ -78,50 +75,49 @@ to become a standards updating document while [I-D.draft-koldychev-pce-operation
 
 # Stateful Bringup
 
-[RFC8231] Section 5.8.2, allows delegation of an LSP in operationally
-down state, but at the same time mandates the use of PCReq, before
-sending PCRpt.  In this document, we would like to make it clear that
-sending PCReq is optional.
+[RFC8231] Section 5.8.2 allows delegation of an LSP in an operationally
+down state, but at the same time mandates the use of PCReq
+before sending PCRpt. This document clarifies that sending PCReq is optional.
 
-We shall refer to the process of sending PCReq before PCRpt as
-"stateless bringup".  In reality, stateless bringup introduces
-overhead and is not possible to enforce from the PCE, because the
-stateless PCE is not required to keep any per-LSP state about
-previous PCReq messages.  It was found that many vendors choose to
-ignore this requirement and send the PCRpt directly, without going
-through PCReq.  Even though this behavior is against [RFC8231], it
-offers some advantages and simplifications, as will be explained in
-this section.  This document therefore updates [RFC8231].
+The process of sending PCReq before PCRpt is referred to in
+this document as "stateless bringup". In practice, stateless
+bringup introduces overhead and the PcRpt sent from PCC cannot be
+enforced by the PCE, because a stateless PCE is not required to
+maintain any per-LSP state about previous PCReq messages. It has been
+observed that many implementations choose to ignore this requirement and send
+the PCRpt directly, without first sending a PCReq. Although this
+behavior is not compliant with [RFC8231], it offers message processing
+advantages and simplifications. As a result, this document updates [RFC8231].
 
-Even though all the major vendors today are moving to the stateful
-PCE model, it does not deprecate the need for stateless PCEP.  The
-key property of stateless PCEP is that PCReq messages do not modify
-the state of the PCE LSP-DB.  Therefore, PCReq messages are useful
-for many OAM ping/traceroute applications where the PCC wishes to
-probe the network topology without having any effect on the existing
-LSPs.
+The adoption of stateful PCE does not eliminate the utility of stateless PCEP.
+A characteristic of stateless PCEP is that PCReq messages does require altering
+the LSP path state information in the PCE. As a result, PCReq messages can be used
+in scenarios such as OAM functions (e.g., ping and traceroute), where it is necessary
+to probe the network topology without impacting existing LSPs and LSP state management
+in the PCE.
 
 ## Updates to RFC 8231
 
 [RFC8231] Section 5.8.2, says "The only explicit way for a PCC to
 request a path from the PCE is to send a PCReq message.  The PCRpt
 message MUST NOT be used by the PCC to attempt to request a path from
-the PCE."  In this document we update [RFC8231] to remove the quoted
+the PCE."  This document updates [RFC8231] to remove the quoted
 text.
 
 As part of the new bringup procedure, the PCC MAY delegate an empty
-LSP (no ERO or empty ERO) to the PCE and then wait for the PCE to
-send PCUpd, without sending PCReq.  We shall refer to this process as
-"stateful bringup".  The PCE MUST support the original stateless
-bringup, for backward compatibility purposes.  Supporting stateful
-bringup should not require introducing any new behavior on the PCE,
-because as mentioned earlier, the PCE does not modify LSP-DB state
-based on PCReq messages.  So whether the PCE has received a PCReq or
-not, it would process the PCRpt all the same.
+LSP (no ERO or empty ERO) to the PCE and then wait for the PCE
+to send a PCUpd, without first sending a PCReq. This process is
+referred to as "stateful bringup". The PCE MUST support the
+original stateless bringup for backward compatibility.
+Supporting stateful bringup does not require introducing new
+behavior on the PCE, since, as previously noted, a PCE implementation
+may choose not to modify LSP-DB state based on PCReq messages.
+Therefore, regardless of whether a PCReq has been received, the PCE
+processes the PCRpt in the same manner.
 
-An example of stateful bringup follows.  In our example the PCC
-starts off by using LSP-ID of 0.  The value 0 does not hold any
-special meaning, any other 16-bit value could have been used.
+An example of stateful bringup follows. In this example, the PCC
+starts by using an LSP-ID of 0. The value 0 does not hold any
+special meaning; any other 16-bit value could have been used.
 
 PCC has no LSP yet, but wants to establish a path.  PCC sends
 PCRpt(R-FLAG=0, D-flag=1, OPER-FLAG=DOWN, PLSP-ID=100, LSP-ID=0,
