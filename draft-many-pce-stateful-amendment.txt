@@ -6,7 +6,7 @@ PCE Working Group                                         A. S. (Editor)
 Internet-Draft                                                     Nokia
 Updates: 8231, 8664 (if approved)                           M. Koldychev
 Intended status: Standards Track                            S. Sivabalan
-Expires: 19 December 2025                                          Ciena
+Expires: 20 December 2025                                          Ciena
                                                               D. Achavel
                                                                    Nokia
                                                                  S. Peng
@@ -15,7 +15,7 @@ Expires: 19 December 2025                                          Ciena
                                                    Juniper Networks, Inc
                                                                 S. Sidor
                                                                    Cisco
-                                                            17 June 2025
+                                                            18 June 2025
 
 
         Amendments to Stateful PCE Communication Protocol (PCEP)
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 December 2025.
+   This Internet-Draft will expire on 20 December 2025.
 
 Copyright Notice
 
@@ -136,7 +136,7 @@ Table of Contents
    referred to as "stateful bringup".  The PCE MUST support the original
    stateless bringup for backward compatibility.  Supporting stateful
    bringup does not require introducing new behavior on the PCE, since,
-   as previously noted, a PCE implementation may choose not to modify
+   as previously noted, a PCE implementation is not required to modify
    LSP-DB state based on PCReq messages.  Therefore, regardless of
    whether a PCReq has been received, the PCE processes the PCRpt in the
    same manner.
