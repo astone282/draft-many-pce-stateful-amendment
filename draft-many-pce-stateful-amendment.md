@@ -73,6 +73,60 @@ This document serves as an update to [RFC8664] to permit the exclusion of the RR
 
 {::boilerplate bcp14-tagged}
 
+# Terminology
+
+The following terminologies are used in this document:
+
+PCC:  Path Computation Client.  Any client application requesting a
+path computation to be performed by a Path Computation Element.
+
+PCE:  Path Computation Element.  An entity (component, application,
+or network node) that is capable of computing a network path or
+route based on a network graph and applying computational
+constraints.
+
+PCEP:  Path Computation Element Protocol.
+
+MBB:  Make-Before-Break.  A procedure during which the head-end of a
+traffic-engineered path wishes to move traffic to a new path
+without losing any traffic, by first "making" a new path and then
+"breaking" the old path.
+
+Association parameters:  As described in [RFC8697], the combination
+of the mandatory fields Association type, Association ID and
+Association Source in the ASSOCIATION object uniquely identify the
+association group.  If the optional TLVs - Global Association
+Source or Extended Association ID are included, then they are
+included in combination with mandatory fields to uniquely identify
+the association group.
+
+Association information:  As described in [RFC8697], the ASSOCIATION
+object could also include other optional TLVs based on the
+association types, that provides 'information' related to the
+association type.
+
+ERO: Explicit Route Object is the path of the LSP encoded into a PCEP object.
+In this document, an empty ERO object, i.e., without any subobjects,
+is represented with notation "ERO={}". An ERO object containing a given
+sequence of subobjects is represented as "ERO={A}".
+
+PCRPT-LSP-DB: PCEP Reported Label Switched Path Database. A logical datastore
+that captures the reported state information of Label Switched Paths (LSPs)
+within a PCEP speaker. This term is not defined in the PCE architecture;
+however, it is used in this document to describe how a PCEP speaker may
+internally maintain LSP-related state information reported via PCRpt messages.
+
+EXTENDED-LSP-DB: Extended Label Switched Path Database. An implementation-specific
+logical datastore used to capture information related to a Label Switched Path.
+It may be keyed using the same identifiers as the PCRPT-LSP-DB. This term is not
+defined in the PCE architecture but is used in this document to refer to a conceptual
+datastore that can include additional attributes—such as desired state,
+telemetry data, and other information not defined within IETF PCE working group documents.
+
+PLSP-ID (Path LSP Identifier): Introduced in [RFC8231]. A unique identifier used in PCEP to
+distinguish a specific LSP between a PCC and a PCE which is constant for the lifetime of
+a PCEP session.
+
 # Stateful Bringup
 
 [RFC8231] Section 5.8.2 allows delegation of an LSP in an operationally
@@ -96,6 +150,17 @@ in scenarios such as OAM functions (e.g., ping and traceroute), where it is nece
 to probe the network topology without impacting existing LSPs and LSP state management
 in the PCE.
 
+This document uses the concept of a PCRPT-LSP-DB to represent the database of actual LSP state in the network,
+as reported by PCCs. It is used to illustrate the internal state maintained by PCEP speakers in
+response to PCRpt messages. This datastore is modified only by PCRpt messages. In contrast, additional information
+that a PCE implementation may maintain such as desired state, policy metadata, or telemetry is considered part of
+the EXTENDED-LSP-DB. The EXTENDED-LSP-DB is an implementation-specific logical store which is outside the scope of this document.
+
+Note that the term "LSP", which stands for "Label Switched Path", if taken too literally, would
+restrict the discussion to the MPLS dataplane only. In this document, the term "LSP" is applied
+to non-MPLS paths as well, to avoid renaming the term. Alternatively, the term "LSP" could be
+replaced with "Instance".
+
 ## Updates to RFC 8231
 
 [RFC8231] Section 5.8.2, says "The only explicit way for a PCC to
@@ -109,9 +174,10 @@ LSP (no ERO or empty ERO) to the PCE and then wait for the PCE
 to send a PCUpd, without first sending a PCReq. This process is
 referred to as "stateful bringup". The PCE MUST support the
 original stateless bringup for backward compatibility.
+
 Supporting stateful bringup does not require introducing new
 behavior on the PCE, since, as previously noted, a PCE implementation
-is not required to modify LSP-DB state based on PCReq messages.
+only modifies the conceptual PCRPT-LSP-DB state based on PCReq messages.
 Therefore, regardless of whether a PCReq has been received, the PCE
 processes the PCRpt in the same manner.
 
