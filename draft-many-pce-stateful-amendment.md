@@ -177,7 +177,7 @@ original stateless bringup for backward compatibility.
 
 Supporting stateful bringup does not require introducing new
 behavior on the PCE, since, as previously noted, a PCE implementation
-only modifies the conceptual PCRPT-LSP-DB state based on PCReq messages.
+only modifies the conceptual PCRPT-LSP-DB state based on PcRpt messages.
 Therefore, regardless of whether a PCReq has been received, the PCE
 processes the PCRpt in the same manner.
 
