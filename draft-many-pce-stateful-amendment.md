@@ -144,7 +144,7 @@ behavior is not compliant with [RFC8231], it offers message processing
 advantages and simplifications. As a result, this document updates [RFC8231].
 
 The adoption of stateful PCE does not eliminate the utility of stateless PCEP.
-A characteristic of stateless PCEP is that PCReq messages does require altering
+A characteristic of stateless PCEP is that PCReq messages does not require altering
 the LSP path state information in the PCE. As a result, PCReq messages can be used
 in scenarios such as OAM functions (e.g., ping and traceroute), where it is necessary
 to probe the network topology without impacting existing LSPs and LSP state management
