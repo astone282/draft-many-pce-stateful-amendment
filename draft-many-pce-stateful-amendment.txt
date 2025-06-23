@@ -6,7 +6,7 @@ PCE Working Group                                         A. S. (Editor)
 Internet-Draft                                                     Nokia
 Updates: 8231, 8664 (if approved)                           M. Koldychev
 Intended status: Standards Track                            S. Sivabalan
-Expires: 24 December 2025                                          Ciena
+Expires: 25 December 2025                                          Ciena
                                                               D. Achavel
                                                                    Nokia
                                                                  S. Peng
@@ -15,7 +15,7 @@ Expires: 24 December 2025                                          Ciena
                                                    Juniper Networks, Inc
                                                                 S. Sidor
                                                                    Cisco
-                                                            22 June 2025
+                                                            23 June 2025
 
 
         Amendments to Stateful PCE Communication Protocol (PCEP)
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 December 2025.
+   This Internet-Draft will expire on 25 December 2025.
 
 Copyright Notice
 
@@ -174,10 +174,10 @@ Table of Contents
 
    The adoption of stateful PCE does not eliminate the utility of
    stateless PCEP.  A characteristic of stateless PCEP is that PCReq
-   messages does require altering the LSP path state information in the
-   PCE.  As a result, PCReq messages can be used in scenarios such as
-   OAM functions (e.g., ping and traceroute), where it is necessary to
-   probe the network topology without impacting existing LSPs and LSP
+   messages does not require altering the LSP path state information in
+   the PCE.  As a result, PCReq messages can be used in scenarios such
+   as OAM functions (e.g., ping and traceroute), where it is necessary
+   to probe the network topology without impacting existing LSPs and LSP
    state management in the PCE.
 
    This document uses the concept of a PCRPT-LSP-DB to represent the
