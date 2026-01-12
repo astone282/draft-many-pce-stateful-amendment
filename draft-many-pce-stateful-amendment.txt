@@ -350,9 +350,9 @@ Table of Contents
    capability is currently informational; it serves to notify the PCE
    that the PCC explicitly supports the mandated redelegation behavior.
    This allows the PCE to distinguish between a PCC that is expected to
-   redelegate (per this document) and a legacy PCC, requiring the the
-   PCE to follow local policy and therefore MAY explicitly request
-   delegation of orphaned LSPs.
+   redelegate (per this document) and a legacy PCC, requiring the PCE to
+   follow local policy and therefore MAY explicitly request delegation
+   of orphaned LSPs.
 
 6.  Security Considerations
 
