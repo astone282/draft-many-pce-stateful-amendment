@@ -286,7 +286,7 @@ to [RFC8281] procedures and explicitly request delegation of orphaned LSPs.
 Capability Advertisement: A capability mechanism to indicate support for this document may be defined in a future revision.
 This capability is currently informational; it serves to notify the PCE that the PCC explicitly supports the mandated redelegation behavior.
 This allows the PCE to distinguish between a PCC that is expected to redelegate (per this document) and a legacy PCC,
-requiring the the PCE to follow local policy and therefore MAY explicitly request delegation of orphaned LSPs.
+requiring the PCE to follow local policy and therefore MAY explicitly request delegation of orphaned LSPs.
 
 # Security Considerations
 
