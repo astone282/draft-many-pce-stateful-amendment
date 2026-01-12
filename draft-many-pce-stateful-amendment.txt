@@ -4,9 +4,9 @@
 
 PCE Working Group                                         A. S. (Editor)
 Internet-Draft                                                     Nokia
-Updates: 8231, 8664 (if approved)                           M. Koldychev
+Updates: 8231, 8664, 8281 (if approved)                     M. Koldychev
 Intended status: Standards Track                            S. Sivabalan
-Expires: 25 December 2025                                          Ciena
+Expires: 16 July 2026                                              Ciena
                                                               D. Achavel
                                                                    Nokia
                                                                  S. Peng
@@ -15,7 +15,7 @@ Expires: 25 December 2025                                          Ciena
                                                    Juniper Networks, Inc
                                                                 S. Sidor
                                                                    Cisco
-                                                            23 June 2025
+                                                         12 January 2026
 
 
         Amendments to Stateful PCE Communication Protocol (PCEP)
@@ -23,8 +23,9 @@ Expires: 25 December 2025                                          Ciena
 
 Abstract
 
-   This document updates RFC8231 and RFC8664 to reflect operationalized
-   implementations and define optimizations in the PCEP protocol.
+   This document updates RFC8231, RFC8664 and RFC8281 to reflect
+   operationalized implementations and define optimizations in the PCEP
+   protocol.
 
 Status of This Memo
 
@@ -41,11 +42,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 December 2025.
+   This Internet-Draft will expire on 16 July 2026.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -63,14 +64,18 @@ Table of Contents
      1.1.  Requirements Language
    2.  Terminology
    3.  Stateful Bringup
-     3.1.  Updates to RFC 8231
-   4.  Use of SR-RRO and SRv6-RRO objects
-   5.  Security Considerations
-   6.  Managability Considerations
-   7.  IANA Considerations
-   8.  References
-     8.1.  Normative References
-     8.2.  Informative References
+     3.1.  Updates to RFC 8231 - Stateful bringup
+     3.2.  Backwards Compatibility
+   4.  Updates to RFC 8664 - Use of SR-RRO and SRv6-RRO objects
+     4.1.  Backwards Compatibility
+   5.  Updates to RFC 8281 - Orphaned LSP without delegation
+     5.1.  Backwards Compatibility
+   6.  Security Considerations
+   7.  Managability Considerations
+   8.  IANA Considerations
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
    Acknowledgments
    Authors' Addresses
 
@@ -89,6 +94,14 @@ Table of Contents
    the encoding of segments in the ERO and RRO objects in PCEP.  This
    document serves as an update to [RFC8664] to permit the exclusion of
    the RRO object for Segment Routed paths.
+
+   Lastly, [RFC8281] describes two mechanisms for handling orphaned
+   LSPs, one of which requires a PCE to request delegation of the
+   orphaned LSP.  However, this mechanism is incompletely specified,
+   which has led most implementations to follow PCC originated
+   redelegation when an LSP becomes orphaned.  This document updates
+   [RFC8281] to clarify the ambiguity and promote interoperability by
+   mandating that the PCC attempt to redelegate orphaned LSPs.
 
 1.1.  Requirements Language
 
@@ -196,7 +209,7 @@ Table of Contents
    MPLS paths as well, to avoid renaming the term.  Alternatively, the
    term "LSP" could be replaced with "Instance".
 
-3.1.  Updates to RFC 8231
+3.1.  Updates to RFC 8231 - Stateful bringup
 
    [RFC8231] Section 5.8.2, says "The only explicit way for a PCC to
    request a path from the PCE is to send a PCReq message.  The PCRpt
@@ -208,12 +221,6 @@ Table of Contents
    send a PCUpd, without first sending a PCReq.  This process is
    referred to as "stateful bringup".  The PCE MUST support the original
    stateless bringup for backward compatibility.
-
-   Supporting stateful bringup does not require introducing new behavior
-   on the PCE, since, as previously noted, a PCE implementation only
-   modifies the conceptual PCRPT-LSP-DB state based on PcRpt messages.
-   Therefore, regardless of whether a PCReq has been received, the PCE
-   processes the PCRpt in the same manner.
 
    An example of stateful bringup follows.  In this example, the PCC
    starts by using an LSP-ID of 0.  The value 0 does not hold any
@@ -243,7 +250,17 @@ Table of Contents
 
                   Table 2: Content of LSP DB after PcUpd
 
-4.  Use of SR-RRO and SRv6-RRO objects
+3.2.  Backwards Compatibility
+
+   The stateful bringup mechanism is compatible with legacy PCEP
+   implementations.  The PCE continues to support stateless bringup (via
+   PCReq) for legacy PCCs.  Supporting stateful bringup does not require
+   introducing new behavior on the PCE, since, as previously noted, a
+   PCE implementation only modifies the conceptual PCRPT-LSP-DB state
+   based on PcRpt messages.  Therefore, regardless of whether a PCReq
+   has been received, the PCE processes the PCRpt in the same manner.
+
+4.  Updates to RFC 8664 - Use of SR-RRO and SRv6-RRO objects
 
    [RFC8231] defines a PCRpt message which contains <intended-path>
    known as the ERO object and <actual-path> known as the RRO object.
@@ -271,21 +288,88 @@ Table of Contents
    SR-TE introduces some form of signaling similar to RSVP-TE, the use
    of RRO is discouraged for SR-TE LSPs.
 
-5.  Security Considerations
+4.1.  Backwards Compatibility
+
+   The update to [RFC8664] permitting PCC to omit carrying SR-RRO/
+   SRv6-RRO may create interoperability problems between different
+   implementations of newer PCC and a legacy PCE.  It is possible that
+   an implementation of PCE which requires reading the SR-RRO/SRv6-RRO,
+   may result with incomplete data processing on the PCE for the LSP.
+   However, as this document is attempting to reflect operationalized
+   implementations, PCE implementations are likely already capable of
+   falling back to processing the SR-ERO/SRv6-ERO objects.
+
+5.  Updates to RFC 8281 - Orphaned LSP without delegation
+
+   [RFC8281] Section 6, describes two mechanisms for handling the case
+   when an LSP becomes orphaned.  The relevant text is as follows:
+
+   "The PCC MAY attempt to redelegate an orphaned LSP by following the
+   procedures of [RFC8231].  Alternatively, if the orphaned LSP was PCE-
+   initiated, then a PCE MAY obtain control over it, as follows"
+
+   The second mechanism goes on to describe the messaging procedures by
+   which a PCE may obtain control of an orphaned PCE-initiated LSP.
+   However, the document does not define how a PCE determines whether a
+   PCC expects it to take action to obtain control, nor does it specify
+   when such action should be taken.  This ambiguity is problematic in
+   deployments with backup or redundant PCEs, as a PCE may be completely
+   unaware of the current delegation status of an LSP with respect to
+   another PCE.
+
+   To address this issue, this document updates the previously quoted
+   text in [RFC8281] as follows:
+
+   "PCC MUST attempt to redelegate an orphaned LSP to a connected PCE by
+   following the procedures of [RFC8231] and in accordance with local
+   policy."
+
+5.1.  Backwards Compatibility
+
+   The update to [RFC8281] mandating that a PCC MUST attempt to
+   redelegate orphaned LSPs introduces considerations for
+   interoperability between updated and legacy implementations.
+
+   PCC Perspective: A PCC implementing this document MUST attempt to
+   redelegate orphaned LSPs to an active PCE.  From the perspective of a
+   legacy PCE, these redelegations will appear as standard [RFC8231]
+   procedures.  Since legacy PCEs are already capable of processing
+   redelegation of LSPs driven from PCC, this update is backwards
+   compatible.
+
+   PCE Perspective: For a PCE implementing this document, the primary
+   change is the shift in expectation regarding PCC behavior.  A PCE
+   operates with the expectation that the PCC will initiate
+   redelegation.  However, if the PCC is a legacy implementation that
+   does not perform the redelegation, the PCE MAY apply local policy to
+   decide when to revert to [RFC8281] procedures and explicitly request
+   delegation of orphaned LSPs.
+
+   Capability Advertisement: A capability mechanism to indicate support
+   for this document may be defined in a future revision.  This
+   capability is currently informational; it serves to notify the PCE
+   that the PCC explicitly supports the mandated redelegation behavior.
+   This allows the PCE to distinguish between a PCC that is expected to
+   redelegate (per this document) and a legacy PCC, requiring the the
+   PCE to follow local policy and therefore MAY explicitly request
+   delegation of orphaned LSPs.
+
+6.  Security Considerations
+
+   The security considerations described in [RFC8231] and [RFC8281]
+   apply to this document.
+
+7.  Managability Considerations
 
    TODO
 
-6.  Managability Considerations
-
-   TODO
-
-7.  IANA Considerations
+8.  IANA Considerations
 
    This document has no IANA actions.
 
-8.  References
+9.  References
 
-8.1.  Normative References
+9.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -307,13 +391,19 @@ Table of Contents
               DOI 10.17487/RFC8231, September 2017,
               <https://www.rfc-editor.org/rfc/rfc8231>.
 
+   [RFC8281]  Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "Path
+              Computation Element Communication Protocol (PCEP)
+              Extensions for PCE-Initiated LSP Setup in a Stateful PCE
+              Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,
+              <https://www.rfc-editor.org/rfc/rfc8281>.
+
    [RFC8664]  Sivabalan, S., Filsfils, C., Tantsura, J., Henderickx, W.,
               and J. Hardwick, "Path Computation Element Communication
               Protocol (PCEP) Extensions for Segment Routing", RFC 8664,
               DOI 10.17487/RFC8664, December 2019,
               <https://www.rfc-editor.org/rfc/rfc8664>.
 
-8.2.  Informative References
+9.2.  Informative References
 
    [I-D.draft-koldychev-pce-operational]
               Koldychev, M., Sivabalan, S., Peng, S., Achaval, D.,
@@ -333,7 +423,9 @@ Acknowledgments
 
    The authors would like to thank Adrian Farrel for useful review
    comments on [I-D.draft-koldychev-pce-operational] which have been
-   carried over and have been applied into this document.
+   carried over and have been applied into this document.  The authors
+   would also like to thank Dhruv Dhody for content discussion and
+   review.
 
 Authors' Addresses
 

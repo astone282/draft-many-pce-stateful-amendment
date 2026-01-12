@@ -13,24 +13,23 @@
 <meta content="Hari Kotni" name="author">
 <meta content="Samuel Sidor" name="author">
 <meta content="
-       This document updates RFC8231 and RFC8664 to reflect operationalized implementations and define optimizations in the PCEP protocol. 
+       This document updates RFC8231, RFC8664 and RFC8281 to reflect operationalized implementations and define optimizations in the PCEP protocol. 
     " name="description">
-<meta content="xml2rfc 3.29.0" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="draft-many-pce-stateful-amendment-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.29.0
-    Python 3.12.11
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
-    intervaltree 3.1.0
+    intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 5.3.1
-    platformdirs 4.3.8
+    lxml 6.0.2
+    platformdirs 4.5.1
     pycountry 24.6.1
-    PyYAML 6.0.2
-    requests 2.32.4
-    setuptools 80.9.0
-    wcwidth 0.2.13
+    PyYAML 6.0.3
+    requests 2.32.5
+    wcwidth 0.2.14
 -->
 <link href="draft-many-pce-stateful-amendment.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1049,11 +1048,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">PCEP-STATEFUL-AMEND</td>
-<td class="right">June 2025</td>
+<td class="right">January 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">(Editor), et al.</td>
-<td class="center">Expires 25 December 2025</td>
+<td class="center">Expires 16 July 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,15 +1065,15 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-many-pce-stateful-amendment-latest</dd>
 <dt class="label-updates">Updates:</dt>
 <dd class="updates">
-<a href="https://www.rfc-editor.org/rfc/rfc8231" class="eref">8231</a>, <a href="https://www.rfc-editor.org/rfc/rfc8664" class="eref">8664</a> (if approved)</dd>
+<a href="https://www.rfc-editor.org/rfc/rfc8231" class="eref">8231</a>, <a href="https://www.rfc-editor.org/rfc/rfc8664" class="eref">8664</a>, <a href="https://www.rfc-editor.org/rfc/rfc8281" class="eref">8281</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-23" class="published">23 June 2025</time>
+<time datetime="2026-01-12" class="published">12 January 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-25">25 December 2025</time></dd>
+<dd class="expires"><time datetime="2026-07-16">16 July 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1111,7 +1110,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">Amendments to Stateful PCE Communication Protocol (PCEP)</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document updates RFC8231 and RFC8664 to reflect operationalized implementations and define optimizations in the PCEP protocol.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document updates RFC8231, RFC8664 and RFC8281 to reflect operationalized implementations and define optimizations in the PCEP protocol.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1132,7 +1131,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 16 July 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1141,7 +1140,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2025 IETF Trust and the persons identified as the
+            Copyright (c) 2026 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1176,38 +1175,54 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-stateful-bringup" class="internal xref">Stateful Bringup</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
-                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-updates-to-rfc-8231" class="internal xref">Updates to RFC 8231</a></p>
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-updates-to-rfc-8231-statefu" class="internal xref">Updates to RFC 8231 - Stateful bringup</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-backwards-compatibility" class="internal xref">Backwards Compatibility</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-use-of-sr-rro-and-srv6-rro-" class="internal xref">Use of SR-RRO and SRv6-RRO objects</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-managability-considerations" class="internal xref">Managability Considerations</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-references" class="internal xref">References</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-updates-to-rfc-8664-use-of-" class="internal xref">Updates to RFC 8664 - Use of SR-RRO and SRv6-RRO objects</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-backwards-compatibility-2" class="internal xref">Backwards Compatibility</a></p>
 </li>
             </ul>
 </li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-updates-to-rfc-8281-orphane" class="internal xref">Updates to RFC 8281 - Orphaned LSP without delegation</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-backwards-compatibility-3" class="internal xref">Backwards Compatibility</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-managability-considerations" class="internal xref">Managability Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1224,6 +1239,9 @@ This document serves to optimize the original procedure in <span>[<a href="#RFC8
 greatly simplifies implementation and optimizes the protocol.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">In addition, <span>[<a href="#RFC8664" class="cite xref">RFC8664</a>]</span> introduced extensions for Segment Routing and the encoding of segments in the ERO and RRO objects in PCEP.
 This document serves as an update to <span>[<a href="#RFC8664" class="cite xref">RFC8664</a>]</span> to permit the exclusion of the RRO object for Segment Routed paths.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">Lastly, <span>[<a href="#RFC8281" class="cite xref">RFC8281</a>]</span> describes two mechanisms for handling orphaned LSPs, one of which requires a PCE to request delegation of the orphaned LSP. However,
+this mechanism is incompletely specified, which has led most implementations to follow PCC originated redelegation when an LSP becomes orphaned.
+This document updates <span>[<a href="#RFC8281" class="cite xref">RFC8281</a>]</span> to clarify the ambiguity and promote interoperability by mandating that the PCC attempt to redelegate orphaned LSPs.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <div id="requirements-language">
 <section id="section-1.1">
         <h3 id="name-requirements-language">
@@ -1317,10 +1335,10 @@ the EXTENDED-LSP-DB. The EXTENDED-LSP-DB is an implementation-specific logical s
 restrict the discussion to the MPLS dataplane only. In this document, the term "LSP" is applied
 to non-MPLS paths as well, to avoid renaming the term. Alternatively, the term "LSP" could be
 replaced with "Instance".<a href="#section-3-5" class="pilcrow">¶</a></p>
-<div id="updates-to-rfc-8231">
+<div id="updates-to-rfc-8231-stateful-bringup">
 <section id="section-3.1">
-        <h3 id="name-updates-to-rfc-8231">
-<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-updates-to-rfc-8231" class="section-name selfRef">Updates to RFC 8231</a>
+        <h3 id="name-updates-to-rfc-8231-statefu">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-updates-to-rfc-8231-statefu" class="section-name selfRef">Updates to RFC 8231 - Stateful bringup</a>
         </h3>
 <p id="section-3.1-1"><span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span> Section 5.8.2, says "The only explicit way for a PCC to
 request a path from the PCE is to send a PCReq message.  The PCRpt
@@ -1332,17 +1350,12 @@ LSP (no ERO or empty ERO) to the PCE and then wait for the PCE
 to send a PCUpd, without first sending a PCReq. This process is
 referred to as "stateful bringup". The PCE <span class="bcp14">MUST</span> support the
 original stateless bringup for backward compatibility.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.1-3">Supporting stateful bringup does not require introducing new
-behavior on the PCE, since, as previously noted, a PCE implementation
-only modifies the conceptual PCRPT-LSP-DB state based on PcRpt messages.
-Therefore, regardless of whether a PCReq has been received, the PCE
-processes the PCRpt in the same manner.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.1-4">An example of stateful bringup follows. In this example, the PCC
+<p id="section-3.1-3">An example of stateful bringup follows. In this example, the PCC
 starts by using an LSP-ID of 0. The value 0 does not hold any
-special meaning; any other 16-bit value could have been used.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.1-5">PCC has no LSP yet, but wants to establish a path.  PCC sends
+special meaning; any other 16-bit value could have been used.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">PCC has no LSP yet, but wants to establish a path.  PCC sends
 PCRpt(R-FLAG=0, D-flag=1, OPER-FLAG=DOWN, PLSP-ID=100, LSP-ID=0,
-ERO={}).<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+ERO={}).<a href="#section-3.1-4" class="pilcrow">¶</a></p>
 <span id="name-content-of-lsp-db-after-fir"></span><table class="center" id="table-1">
           <caption>
 <a href="#table-1" class="selfRef">Table 1</a>:
@@ -1361,9 +1374,9 @@ ERO={}).<a href="#section-3.1-5" class="pilcrow">¶</a></p>
             </tr>
           </tbody>
         </table>
-<p id="section-3.1-7">PCC received a PCUpd from the PCE and has decided to install the
+<p id="section-3.1-6">PCC received a PCUpd from the PCE and has decided to install the
 ERO={A} from that PCUpd.  PCC sends PCRpt(R-FLAG=0, D-flag=1, OPER-
-FLAG=UP, PLSP-ID=100, LSP-ID=0, ERO={A}).<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+FLAG=UP, PLSP-ID=100, LSP-ID=0, ERO={A}).<a href="#section-3.1-6" class="pilcrow">¶</a></p>
 <span id="name-content-of-lsp-db-after-pcu"></span><table class="center" id="table-2">
           <caption>
 <a href="#table-2" class="selfRef">Table 2</a>:
@@ -1384,12 +1397,25 @@ FLAG=UP, PLSP-ID=100, LSP-ID=0, ERO={A}).<a href="#section-3.1-7" class="pilcrow
         </table>
 </section>
 </div>
+<div id="backwards-compatibility">
+<section id="section-3.2">
+        <h3 id="name-backwards-compatibility">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-backwards-compatibility" class="section-name selfRef">Backwards Compatibility</a>
+        </h3>
+<p id="section-3.2-1">The stateful bringup mechanism is compatible with legacy PCEP implementations.
+The PCE continues to support stateless bringup (via PCReq) for legacy PCCs.
+Supporting stateful bringup does not require introducing new behavior on the PCE, since, as previously noted,
+a PCE implementation only modifies the conceptual PCRPT-LSP-DB state based on PcRpt messages.
+Therefore, regardless of whether a PCReq has been received, the PCE
+processes the PCRpt in the same manner.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="use-of-sr-rro-and-srv6-rro-objects">
+</section>
+</div>
+<div id="updates-to-rfc-8664-use-of-sr-rro-and-srv6-rro-objects">
 <section id="section-4">
-      <h2 id="name-use-of-sr-rro-and-srv6-rro-">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-use-of-sr-rro-and-srv6-rro-" class="section-name selfRef">Use of SR-RRO and SRv6-RRO objects</a>
+      <h2 id="name-updates-to-rfc-8664-use-of-">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-updates-to-rfc-8664-use-of-" class="section-name selfRef">Updates to RFC 8664 - Use of SR-RRO and SRv6-RRO objects</a>
       </h2>
 <p id="section-4-1"><span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span> defines a PCRpt message which contains <code>&lt;intended-path&gt;</code>
 known as the ERO object and <code>&lt;actual-path&gt;</code> known as the RRO object.
@@ -1414,41 +1440,94 @@ actual path.  In the absence of RRO a PCE <span class="bcp14">MUST</span> interp
 the actual path for the LSP.  Until SR-TE introduces some form of
 signaling similar to RSVP-TE, the use of RRO is discouraged for SR-TE
 LSPs.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<div id="backwards-compatibility-1">
+<section id="section-4.1">
+        <h3 id="name-backwards-compatibility-2">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-backwards-compatibility-2" class="section-name selfRef">Backwards Compatibility</a>
+        </h3>
+<p id="section-4.1-1">The update to <span>[<a href="#RFC8664" class="cite xref">RFC8664</a>]</span> permitting PCC to omit carrying SR-RRO/SRv6-RRO may create interoperability
+problems between different implementations of newer PCC and a legacy PCE. It is possible that an implementation of PCE
+which requires reading the SR-RRO/SRv6-RRO, may result with incomplete data processing on the PCE for the LSP.
+However, as this document is attempting to reflect operationalized implementations, PCE implementations
+are likely already capable of falling back to processing the SR-ERO/SRv6-ERO objects.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="updates-to-rfc-8281-orphaned-lsp-without-delegation">
+<section id="section-5">
+      <h2 id="name-updates-to-rfc-8281-orphane">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-updates-to-rfc-8281-orphane" class="section-name selfRef">Updates to RFC 8281 - Orphaned LSP without delegation</a>
+      </h2>
+<p id="section-5-1"><span>[<a href="#RFC8281" class="cite xref">RFC8281</a>]</span> Section 6, describes two mechanisms for handling the case when an LSP becomes orphaned.
+The relevant text is as follows:<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">"The PCC <span class="bcp14">MAY</span> attempt to redelegate an orphaned LSP by following the procedures of <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span>.
+Alternatively, if the orphaned LSP was PCE-initiated, then a PCE <span class="bcp14">MAY</span> obtain control over it, as follows"<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">The second mechanism goes on to describe the messaging procedures by
+which a PCE may obtain control of an orphaned PCE-initiated LSP. However, the document does not define
+how a PCE determines whether a PCC expects it to take action
+to obtain control, nor does it specify when such action should be taken. This
+ambiguity is problematic in deployments with backup or redundant PCEs,
+as a PCE may be completely unaware of the current delegation status of an LSP
+with respect to another PCE.<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-4">To address this issue, this document updates the previously quoted text in <span>[<a href="#RFC8281" class="cite xref">RFC8281</a>]</span> as follows:<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-5">"PCC <span class="bcp14">MUST</span> attempt to redelegate an orphaned LSP to a connected PCE by following the procedures of <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span> and in accordance
+with local policy."<a href="#section-5-5" class="pilcrow">¶</a></p>
+<div id="backwards-compatibility-2">
+<section id="section-5.1">
+        <h3 id="name-backwards-compatibility-3">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-backwards-compatibility-3" class="section-name selfRef">Backwards Compatibility</a>
+        </h3>
+<p id="section-5.1-1">The update to <span>[<a href="#RFC8281" class="cite xref">RFC8281</a>]</span> mandating that a PCC <span class="bcp14">MUST</span> attempt to redelegate orphaned LSPs introduces considerations
+for interoperability between updated and legacy implementations.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-2">PCC Perspective: A PCC implementing this document <span class="bcp14">MUST</span> attempt to redelegate orphaned LSPs to an active PCE.
+From the perspective of a legacy PCE, these redelegations will appear as standard <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span> procedures.
+Since legacy PCEs are already capable of processing redelegation of LSPs driven from PCC, this update is backwards compatible.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.1-3">PCE Perspective: For a PCE implementing this document, the primary change is the shift in expectation regarding
+PCC behavior. A PCE operates with the expectation that the PCC will initiate redelegation. However, if the PCC is a
+legacy implementation that does not perform the redelegation, the PCE <span class="bcp14">MAY</span> apply local policy to decide when to revert
+to <span>[<a href="#RFC8281" class="cite xref">RFC8281</a>]</span> procedures and explicitly request delegation of orphaned LSPs.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.1-4">Capability Advertisement: A capability mechanism to indicate support for this document may be defined in a future revision.
+This capability is currently informational; it serves to notify the PCE that the PCC explicitly supports the mandated redelegation behavior.
+This allows the PCE to distinguish between a PCC that is expected to redelegate (per this document) and a legacy PCC,
+requiring the the PCE to follow local policy and therefore <span class="bcp14">MAY</span> explicitly request delegation of orphaned LSPs.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-5">
+<section id="section-6">
       <h2 id="name-security-considerations">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-5-1">TODO<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-6-1">The security considerations described in <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span> and <span>[<a href="#RFC8281" class="cite xref">RFC8281</a>]</span> apply to this document.<a href="#section-6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="managability-considerations">
-<section id="section-6">
+<section id="section-7">
       <h2 id="name-managability-considerations">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-managability-considerations" class="section-name selfRef">Managability Considerations</a>
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-managability-considerations" class="section-name selfRef">Managability Considerations</a>
       </h2>
-<p id="section-6-1">TODO<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-7-1">TODO<a href="#section-7-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-7">
+<section id="section-8">
       <h2 id="name-iana-considerations">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-7-1">This document has no IANA actions.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-8-1">This document has no IANA actions.<a href="#section-8-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-combined-references">
-<section id="section-8">
+<section id="section-9">
       <h2 id="name-references">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-8.1">
+<section id="section-9.1">
         <h3 id="name-normative-references">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="RFC2119">[RFC2119]</dt>
@@ -1467,6 +1546,10 @@ LSPs.<a href="#section-4-3" class="pilcrow">¶</a></p>
         <dd>
 <span class="refAuthor">Crabbe, E.</span>, <span class="refAuthor">Minei, I.</span>, <span class="refAuthor">Medved, J.</span>, and <span class="refAuthor">R. Varga</span>, <span class="refTitle">"Path Computation Element Communication Protocol (PCEP) Extensions for Stateful PCE"</span>, <span class="seriesInfo">RFC 8231</span>, <span class="seriesInfo">DOI 10.17487/RFC8231</span>, <time datetime="2017-09" class="refDate">September 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8231">https://www.rfc-editor.org/rfc/rfc8231</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC8281">[RFC8281]</dt>
+        <dd>
+<span class="refAuthor">Crabbe, E.</span>, <span class="refAuthor">Minei, I.</span>, <span class="refAuthor">Sivabalan, S.</span>, and <span class="refAuthor">R. Varga</span>, <span class="refTitle">"Path Computation Element Communication Protocol (PCEP) Extensions for PCE-Initiated LSP Setup in a Stateful PCE Model"</span>, <span class="seriesInfo">RFC 8281</span>, <span class="seriesInfo">DOI 10.17487/RFC8281</span>, <time datetime="2017-12" class="refDate">December 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8281">https://www.rfc-editor.org/rfc/rfc8281</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8664">[RFC8664]</dt>
       <dd>
 <span class="refAuthor">Sivabalan, S.</span>, <span class="refAuthor">Filsfils, C.</span>, <span class="refAuthor">Tantsura, J.</span>, <span class="refAuthor">Henderickx, W.</span>, and <span class="refAuthor">J. Hardwick</span>, <span class="refTitle">"Path Computation Element Communication Protocol (PCEP) Extensions for Segment Routing"</span>, <span class="seriesInfo">RFC 8664</span>, <span class="seriesInfo">DOI 10.17487/RFC8664</span>, <time datetime="2019-12" class="refDate">December 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8664">https://www.rfc-editor.org/rfc/rfc8664</a>&gt;</span>. </dd>
@@ -1475,9 +1558,9 @@ LSPs.<a href="#section-4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-8.2">
+<section id="section-9.2">
         <h3 id="name-informative-references">
-<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="I-D.draft-koldychev-pce-operational">[I-D.draft-koldychev-pce-operational]</dt>
@@ -1499,7 +1582,8 @@ LSPs.<a href="#section-4-3" class="pilcrow">¶</a></p>
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
 <p id="appendix-A-1">The authors would like to thank Adrian Farrel for useful review comments on <span>[<a href="#I-D.draft-koldychev-pce-operational" class="cite xref">I-D.draft-koldychev-pce-operational</a>]</span>
-which have been carried over and have been applied into this document.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+which have been carried over and have been applied into this document. The authors would also like to thank Dhruv Dhody for content
+discussion and review.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
