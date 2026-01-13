@@ -290,7 +290,7 @@ requiring the PCE to follow local policy and therefore MAY explicitly request de
 
 # Security Considerations
 
-The security considerations described in [RFC8231] and [RFC8281] apply to this document.
+The security considerations described in [RFC8231], [RFC8281] and [RFC8664] apply to this document.
 
 # Managability Considerations
 
