@@ -6,7 +6,7 @@ PCE Working Group                                         A. S. (Editor)
 Internet-Draft                                                     Nokia
 Updates: 8231, 8664, 8281 (if approved)                     M. Koldychev
 Intended status: Standards Track                            S. Sivabalan
-Expires: 16 July 2026                                              Ciena
+Expires: 30 August 2026                                            Ciena
                                                               D. Achavel
                                                                    Nokia
                                                                  S. Peng
@@ -15,7 +15,7 @@ Expires: 16 July 2026                                              Ciena
                                                    Juniper Networks, Inc
                                                                 S. Sidor
                                                                    Cisco
-                                                         12 January 2026
+                                                        26 February 2026
 
 
         Amendments to Stateful PCE Communication Protocol (PCEP)
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 July 2026.
+   This Internet-Draft will expire on 30 August 2026.
 
 Copyright Notice
 
@@ -356,8 +356,8 @@ Table of Contents
 
 6.  Security Considerations
 
-   The security considerations described in [RFC8231] and [RFC8281]
-   apply to this document.
+   The security considerations described in [RFC8231], [RFC8281] and
+   [RFC8664] apply to this document.
 
 7.  Managability Considerations
 
@@ -425,7 +425,8 @@ Acknowledgments
    comments on [I-D.draft-koldychev-pce-operational] which have been
    carried over and have been applied into this document.  The authors
    would also like to thank Dhruv Dhody for content discussion and
-   review.
+   review.  Thanks to Marina Fizgeer for bringing the orphaned LSP
+   without delegation problem to the attention of the PCE WG.
 
 Authors' Addresses
 
