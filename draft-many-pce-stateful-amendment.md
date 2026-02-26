@@ -307,4 +307,4 @@ This document has no IANA actions.
 {:numbered="false"}
 The authors would like to thank Adrian Farrel for useful review comments on [I-D.draft-koldychev-pce-operational]
 which have been carried over and have been applied into this document. The authors would also like to thank Dhruv Dhody for content
-discussion and review.
+discussion and review. Thanks to Marina Fizgeer for bringing the orphaned LSP without delegation problem to the attention of the PCE WG.
