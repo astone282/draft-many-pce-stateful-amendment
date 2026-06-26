@@ -15,21 +15,22 @@
 <meta content="
        This document updates RFC8231, RFC8664 and RFC8281 to reflect operationalized implementations and define optimizations in the PCEP protocol. 
     " name="description">
-<meta content="xml2rfc 3.31.0" name="generator">
+<meta content="xml2rfc 3.34.0" name="generator">
 <meta content="draft-many-pce-stateful-amendment-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.31.0
-    Python 3.12.12
-    ConfigArgParse 1.7
+  xml2rfc 3.34.0
+    Python 3.14.5
+    ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 6.0.2
-    platformdirs 4.5.1
+    lxml 6.1.1
+    natsort 8.4.0
+    platformdirs 4.10.0
     pycountry 24.6.1
     PyYAML 6.0.3
-    requests 2.32.5
-    wcwidth 0.3.0
+    requests 2.33.1
+    wcwidth 0.8.1
 -->
 <link href="draft-many-pce-stateful-amendment.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -296,16 +297,19 @@ h1, h2, h3, h4, h5, h6 {
   font-size-adjust: 0.5;
   color: var(--title-color);
 }
-h1#title {
-  font-size: 32px;
-  line-height: 40px;
-  clear: both;
-}
-h1#title, h1#rfcnum {
-  margin: 1.5em 0 0.2em;
-}
-h1#rfcnum + h1#title {
-  margin: 0.2em 0;
+h1 {
+  &#title {
+    font-size: 32px;
+    line-height: 40px;
+    clear: both;
+    margin: 1.5em 0 0.2em;
+  }
+  &#rfcnum {
+    margin: 1.5em 0 0.2em;
+    & + h1#title {
+      margin: 0.2em 0;
+    }
+  }
 }
 
 h1, h2, h3 {
@@ -325,10 +329,10 @@ h4, h5, h6 {
 #abstract+p {
   font-size: 18px;
   line-height: 24px;
-}
-#abstract+p code, #abstract+p samp, #abstract+p tt {
-  font-size: 16px;
-  line-height: 0;
+  & code, & samp, & tt {
+    font-size: 16px;
+    line-height: 0;
+  }
 }
 
 p {
@@ -339,59 +343,59 @@ p {
 div {
   margin: 0;
 }
-.alignRight.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignRight.art-text pre {
-  padding: 0;
-  width: auto;
-}
 .alignRight {
   margin: 1em 0;
-}
-.alignRight > *:first-child {
-  border: none;
-  margin: 0;
-  float: right;
-  clear: both;
-}
-.alignRight > *:nth-child(2) {
-  clear: both;
-  display: block;
-  border: none;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    margin: 0;
+    float: right;
+    clear: both;
+  }
+  & > *:nth-child(2) {
+    clear: both;
+    display: block;
+    border: none;
+  }
 }
 svg {
   display: block;
-}
-/* font-family isn't space-separated, but =~ will have to do */
-svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
-  font-family: var(--font-mono);
-}
-.alignCenter.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignCenter.art-text pre {
-  padding: 0;
-  width: auto;
+  /* font-family isn't space-separated, but =~ will have to do */
+  &[font-family~="monospace" i], & [font-family~="monospace" i] {
+    font-family: var(--font-mono);
+  }
 }
 .alignCenter {
   margin: 1em 0;
-}
-.alignCenter > *:first-child {
-  border: none;
-  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
-     support flexbox yet.
-  */
-  display: table;
-  margin: 0 auto;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+       support flexbox yet.
+    */
+    display: table;
+    margin: 0 auto;
+  }
 }
 
 /* lists */
@@ -429,26 +433,25 @@ dl {
     --indent: 5ch;
     & > dt {
       min-width: calc(var(--indent) - 2ch);
+      float: none;
     }
-  }
-  &.olPercent > dt {
-    float: none;
   }
 
   dl > dd > & {
     margin-top: 0.5em;
     margin-bottom: 0;
   }
-}
-dl:not(.dlNewline) > dt {
-  float: left;
-  margin-right: 2ch;
-  min-width: 8ch;
-}
-dl > dd {
-  margin-bottom: .8em;
-  margin-left: var(--indent) !important; /* stupid element overrides */
-  min-height: 2ex;
+
+  &:not(.dlNewline) > dt {
+    float: left;
+    margin-right: 2ch;
+    min-width: 8ch;
+  }
+  & > dd {
+    margin-bottom: .8em;
+    margin-left: var(--indent) !important; /* stupid element overrides */
+    min-height: 2ex;
+  }
 }
 :is(dl.compact, .dlCompact) > dd {
   margin-bottom: 0;
@@ -464,20 +467,22 @@ dl > dd {
 }
 
 /* links */
-a, a[href].selfRef:hover {
+a {
   text-decoration: none;
+  &[href] {
+    color: var(--link-color);
+    &:hover { text-decoration: underline; }
+    &.selfRef {
+      color: var(--text-color);
+      &:hover {
+        text-decoration: none;
+        background-color: var(--highlight-color);
+      }
+    }
+  }
 }
-a[href] {
-  color: var(--link-color);
-}
-a[href].selfRef, .iref + a[href].internal {
+.iref + a[href].internal {
   color: var(--text-color);
-}
-a[href]:hover {
-  text-decoration: underline;
-}
-a[href].selfRef:hover {
-  background-color: var(--highlight-color);
 }
 a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
   white-space: nowrap;
@@ -513,9 +518,9 @@ img {
 figure {
   margin: 0.5em 0;
   padding: 0;
-}
-figure blockquote {
-  margin: 0.8em 0.4em 0.4em;
+  & blockquote {
+    margin: 0.8em 0.4em 0.4em;
+  }
 }
 figcaption, caption {
   font-style: italic;
@@ -525,17 +530,19 @@ figcaption, caption {
 }
 @media screen {
   /* Auto-collapse boilerplate. */
-  :is(#status-of-memo, #copyright) p {
-    margin: -2px 0;
-    max-height: 0;
-    transition: max-height 2s ease, margin 0.5s ease 0.5s;
-    overflow: hidden;
-  }
-  :is(#status-of-memo, #copyright):hover p,
-  :is(#status-of-memo, #copyright) h2:target ~ p {
-    margin: 0.5em 0;
-    max-height: 500px;
-    overflow: auto;
+  :is(#status-of-memo, #copyright) {
+    & p {
+      margin: -2px 0;
+      max-height: 0;
+      transition: max-height 2s ease, margin 0.5s ease 0.5s;
+      overflow: hidden;
+    }
+    &:hover p,
+    & h2:target ~ p {
+      margin: 0.5em 0;
+      max-height: 500px;
+      overflow: auto;
+    }
   }
   pre, svg {
     display: inline-block;
@@ -585,25 +592,17 @@ table {
   max-width: 100%;
   margin: 0 0 1em;
   border-collapse: collapse;
-}
-table.right {
-  margin-left: auto;
-}
-table.center {
-  margin-left: auto;
-  margin-right: auto;
-}
-table.left {
-  margin-right: auto;
-}
-table .text-left {
-  text-align: left;
-}
-table .text-center {
-  text-align: center;
-}
-table .text-right {
-  text-align: right;
+  &.right { margin-left: auto; }
+  &.center { margin-left: auto; margin-right: auto; }
+  &.left { margin-right: auto; }
+  & .text-left { text-align: left; }
+  & .text-center { text-align: center; }
+  & .text-right { text-align: right; }
+  & caption {
+    margin: 0;
+    padding: 3px 0 3px 1em;
+  }
+  & p { margin: 0; }
 }
 
 thead, tbody {
@@ -623,13 +622,6 @@ th {
 :is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
   background-color: var(--highlight-color);
 }
-table caption {
-  margin: 0;
-  padding: 3px 0 3px 1em;
-}
-table p {
-  margin: 0;
-}
 
 /* pilcrow */
 a.pilcrow {
@@ -640,18 +632,16 @@ a.pilcrow {
     color: var(--pilcrow-weak);
     &:hover { text-decoration: none; }
   }
-}
-@media not print {
-  :hover > a.pilcrow, a.pilcrow:focus {
-    opacity: 1;
+  @media not print {
+    :hover > &, &:focus {
+      opacity: 1;
+    }
+    &[href]:hover {
+      color: var(--pilcrow-strong);
+      background-color: transparent;
+    }
   }
-  a.pilcrow[href]:hover {
-    color: var(--pilcrow-strong);
-    background-color: transparent;
-  }
-}
-@media print {
-  a.pilcrow {
+  @media print {
     display: none;
   }
 }
@@ -710,9 +700,9 @@ sub, sup {
   font-size: 0.9em;
   font-style: italic;
   margin-top: 2em;
-}
-.docInfo .prepared {
-  float: right;
+  & .prepared {
+    float: right;
+  }
 }
 
 /* table of contents */
@@ -802,23 +792,27 @@ hr.addr {
   max-width: calc(100% - 16px);
 }
 @media (min-width: 500px) {
-  #authors-addresses > section {
-    column-count: 2;
-    column-gap: 20px;
-  }
-  #authors-addresses > section > h2 {
-    column-span: all;
-  }
-  /* hack for break-inside: avoid-column */
-  #authors-addresses address {
-    display: inline-block;
-    break-inside: avoid-column;
+  #authors-addresses {
+    & > section {
+      column-count: 2;
+      column-gap: 20px;
+    }
+    & > section > h2 {
+      column-span: all;
+    }
+    /* hack for break-inside: avoid-column */
+    & address {
+      display: inline-block;
+      break-inside: avoid-column;
+    }
   }
 }
 
 /* Comments */
-.rfcEditorRemove p:first-of-type {
-  font-style: italic;
+.rfcEditorRemove {
+  & p:first-of-type {
+    font-style: italic;
+  }
 }
 .cref {
   background-color: rgba(249, 232, 105, 0.3);
@@ -829,19 +823,21 @@ hr.addr {
 }
 
 @media screen {
-  #toc nav {
-    font-family: var(--font-title);
-    font-weight: 360;
-    & > ul { margin-bottom: 2em; }
-    & ul {
-      margin: 0 0 0 4px;
-      & :is(p, li) {
-        margin: 2px 0;
+  #toc {
+    & nav {
+      font-family: var(--font-title);
+      font-weight: 360;
+      & > ul { margin-bottom: 2em; }
+      & ul {
+        margin: 0 0 0 4px;
+        & :is(p, li) {
+          margin: 2px 0;
+        }
       }
     }
-  }
-  #toc a.toplink {
-    float: right;
+    & a.toplink {
+      float: right;
+    }
   }
 }
 @media not screen {
@@ -862,54 +858,54 @@ hr.addr {
     margin: 0;
     border-bottom: 1px solid #ccc;
     opacity: 0.6;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 2px 0 2px 6px;
-    padding-right: 1em;
-    font-size: 18px;
-    line-height: 24px;
-    min-width: 190px;
-    text-align: right;
-    background-color: #444;
-    color: white;
-    cursor: pointer;
-    &::before { /* css hamburger */
-      float: right;
-      position: relative;
-      width: 1em;
-      height: 1px;
-      left: -164px;
-      margin: 8px 0 0 0;
-      background: white none repeat scroll 0 0;
-      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
-      content: "";
+    & h2 {
+      margin: 0;
+      padding: 2px 0 2px 6px;
+      padding-right: 1em;
+      font-size: 18px;
+      line-height: 24px;
+      min-width: 190px;
+      text-align: right;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      &::before { /* css hamburger */
+        float: right;
+        position: relative;
+        width: 1em;
+        height: 1px;
+        left: -164px;
+        margin: 8px 0 0 0;
+        background: white none repeat scroll 0 0;
+        box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+        content: "";
+      }
     }
-  }
-  #toc nav {
-    display: none;
-    background-color: var(--background-color);
-    padding: 0.5em 1em 1em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    height: calc(100vh - 48px);
-    border-left: 1px solid #ddd;
-  }
-  #toc.active {
-    opacity: 1;
-    & nav { display: block; }
-  }
-  /* Make the collapsed ToC header render white on gray also when it's a link */
-  #toc h2 a,
-  #toc h2 a:is(:link, :focus, :hover),
-  #toc a.toplink,
-  #toc a.toplink:hover {
-    color: white;
-    background-color: #444;
-    text-decoration: none;
-  }
-  #toc a.toplink {
-    margin: 2px 0.5em 0;
+    & nav {
+      display: none;
+      background-color: var(--background-color);
+      padding: 0.5em 1em 1em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      height: calc(100vh - 48px);
+      border-left: 1px solid #ddd;
+    }
+    &.active {
+      opacity: 1;
+      & nav { display: block; }
+    }
+    /* Make the collapsed ToC header render white on gray also when it's a link */
+    & h2 a,
+    & h2 a:is(:link, :focus, :hover),
+    & a.toplink,
+    & a.toplink:hover {
+      color: white;
+      background-color: #444;
+      text-decoration: none;
+    }
+    & a.toplink {
+      margin: 2px 0.5em 0;
+    }
   }
 }
 
@@ -928,26 +924,26 @@ hr.addr {
     margin: 0;
     padding: 0;
     z-index: 1;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 0.25em 1em 1em 0;
-  }
-  #toc nav {
-    display: block;
-    height: calc(90vh - 84px);
-    bottom: 0;
-    padding: 0.5em 0 2em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
+    & h2 {
+      margin: 0;
+      padding: 0.25em 1em 1em 0;
+    }
+    & nav {
+      display: block;
+      height: calc(90vh - 84px);
+      bottom: 0;
+      padding: 0.5em 0 2em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+    & a.toplink {
+      margin: 8px 0.5em 0;
+    }
   }
   img { /* future proofing */
     max-width: 100%;
     height: auto;
-  }
-  #toc a.toplink {
-    margin: 8px 0.5em 0;
   }
 }
 
@@ -963,12 +959,13 @@ hr.addr {
   #n-copyright-notice {
     border-bottom: none;
   }
-  #toc, #n-introduction {
-    page-break-before: always;
-  }
   #toc {
+    page-break-before: always;
     border-top: none;
     padding-top: 0;
+  }
+  #n-introduction {
+    page-break-before: always;
   }
   figure, pre, .vcard {
     page-break-inside: avoid;
@@ -1030,17 +1027,19 @@ hr.addr {
 }
 
 /* SVG Trick: a prefix match works because only black and white are allowed */
-svg :is([stroke="black"], [stroke^="#000"]) {
-  stroke: var(--text-color);
-}
-svg :is([stroke="white"], [stroke^="#fff"]) {
-  stroke: var(--background-color);
-}
-svg :is([fill="black"], [fill^="#000"], :not([fill])) {
-  fill: var(--text-color);
-}
-svg :is([fill="white"], [fill^="#fff"]) {
-  fill: var(--background-color);
+svg {
+  & :is([stroke="black"], [stroke^="#000"]) {
+    stroke: var(--text-color);
+  }
+  & :is([stroke="white"], [stroke^="#fff"]) {
+    stroke: var(--background-color);
+  }
+  & :is([fill="black"], [fill^="#000"], :not([fill])) {
+    fill: var(--text-color);
+  }
+  & :is([fill="white"], [fill^="#fff"]) {
+    fill: var(--background-color);
+  }
 }
 </style>
 
@@ -1050,11 +1049,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">PCEP-STATEFUL-AMEND</td>
-<td class="right">February 2026</td>
+<td class="right">June 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">(Editor), et al.</td>
-<td class="center">Expires 30 August 2026</td>
+<td class="center">Expires 28 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1069,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc8231" class="eref">8231</a>, <a href="https://www.rfc-editor.org/rfc/rfc8664" class="eref">8664</a>, <a href="https://www.rfc-editor.org/rfc/rfc8281" class="eref">8281</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-26" class="published">26 February 2026</time>
+<time datetime="2026-06-26" class="published">26 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-30">30 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-28">28 December 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1133,7 +1132,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 30 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 28 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1205,6 +1204,17 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-managability-considerations" class="internal xref">Managability Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-stateful-bringup-2" class="internal xref">Stateful Bringup</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-sr-rro-omission" class="internal xref">SR RRO Omission</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-orphaned-lsp-redelegation" class="internal xref">Orphaned LSP Redelegation</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
@@ -1315,7 +1325,7 @@ down state, but at the same time mandates the use of PCReq
 before sending PCRpt. This document clarifies that sending PCReq is optional.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">The process of sending PCReq before PCRpt is referred to in
 this document as "stateless bringup". In practice, stateless
-bringup introduces overhead and the PcRpt sent from PCC cannot be
+bringup introduces overhead and the PCRpt sent from PCC cannot be
 enforced by the PCE, because a stateless PCE is not required to
 maintain any per-LSP state about previous PCReq messages. It has been
 observed that many implementations choose to ignore this requirement and send
@@ -1323,7 +1333,7 @@ the PCRpt directly, without first sending a PCReq. Although this
 behavior is not compliant with <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span>, it offers message processing
 advantages and simplifications. As a result, this document updates <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span>.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">The adoption of stateful PCE does not eliminate the utility of stateless PCEP.
-A characteristic of stateless PCEP is that PCReq messages does not require altering
+A characteristic of stateless PCEP is that PCReq messages do not require altering
 the LSP path state information in the PCE. As a result, PCReq messages can be used
 in scenarios such as OAM functions (e.g., ping and traceroute), where it is necessary
 to probe the network topology without impacting existing LSPs and LSP state management
@@ -1361,7 +1371,7 @@ ERO={}).<a href="#section-3.1-4" class="pilcrow">¶</a></p>
 <span id="name-content-of-lsp-db-after-fir"></span><table class="center" id="table-1">
           <caption>
 <a href="#table-1" class="selfRef">Table 1</a>:
-<a href="#name-content-of-lsp-db-after-fir" class="selfRef">Content of LSP DB after first PcRpt</a>
+<a href="#name-content-of-lsp-db-after-fir" class="selfRef">Content of LSP DB after first PCRpt</a>
           </caption>
 <thead>
             <tr>
@@ -1382,7 +1392,7 @@ FLAG=UP, PLSP-ID=100, LSP-ID=0, ERO={A}).<a href="#section-3.1-6" class="pilcrow
 <span id="name-content-of-lsp-db-after-pcu"></span><table class="center" id="table-2">
           <caption>
 <a href="#table-2" class="selfRef">Table 2</a>:
-<a href="#name-content-of-lsp-db-after-pcu" class="selfRef">Content of LSP DB after PcUpd</a>
+<a href="#name-content-of-lsp-db-after-pcu" class="selfRef">Content of LSP DB after PCUpd</a>
           </caption>
 <thead>
             <tr>
@@ -1407,7 +1417,7 @@ FLAG=UP, PLSP-ID=100, LSP-ID=0, ERO={A}).<a href="#section-3.1-6" class="pilcrow
 <p id="section-3.2-1">The stateful bringup mechanism is compatible with legacy PCEP implementations.
 The PCE continues to support stateless bringup (via PCReq) for legacy PCCs.
 Supporting stateful bringup does not require introducing new behavior on the PCE, since, as previously noted,
-a PCE implementation only modifies the conceptual PCRPT-LSP-DB state based on PcRpt messages.
+a PCE implementation only modifies the conceptual PCRPT-LSP-DB state based on PCRpt messages.
 Therefore, regardless of whether a PCReq has been received, the PCE
 processes the PCRpt in the same manner.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 </section>
@@ -1427,7 +1437,7 @@ SRv6-RRO sub-objects for SRv6-TE paths.<a href="#section-4-1" class="pilcrow">¶
 <p id="section-4-2">In practice RRO data is the result of signalling via a protocol such
 as RSVP-TE, which allows collection of per-hop information along the
 path.  The ERO and RRO values may be different as the path encoded in
-the ERO may differ than the RRO such as during protection conditions
+the ERO may differ from the RRO such as during protection conditions
 or if the ERO contains loose hops which are expanded upon.  As
 Segment Routing LSP does not perform any signalling, the values of an
 SR-ERO/SRv6-ERO and SR-RRO/SRv6-RRO (respectively) are in practice
@@ -1472,9 +1482,18 @@ to obtain control, nor does it specify when such action should be taken. This
 ambiguity is problematic in deployments with backup or redundant PCEs,
 as a PCE may be completely unaware of the current delegation status of an LSP
 with respect to another PCE.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">To address this issue, this document updates the previously quoted text in <span>[<a href="#RFC8281" class="cite xref">RFC8281</a>]</span> as follows:<a href="#section-5-4" class="pilcrow">¶</a></p>
-<p id="section-5-5">"PCC <span class="bcp14">MUST</span> attempt to redelegate an orphaned LSP to a connected PCE by following the procedures of <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span> and in accordance
-with local policy."<a href="#section-5-5" class="pilcrow">¶</a></p>
+<p id="section-5-4">For example, when the PCE to which an LSP was delegated fails, the PCC detects the loss of the PCEP
+session and the LSP becomes orphaned.  A backup PCE with an active session to the same PCC cannot know
+whether the PCC will redelegate the LSP or whether the backup PCE should initiate the <span>[<a href="#RFC8281" class="cite xref">RFC8281</a>]</span> procedure
+to request delegation.  Without clear guidance, backup PCE implementations may differ in behavior,
+which can result in duplicate control attempts, delayed takeover, or no takeover at all.<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-5">To address this issue, this document updates the previously quoted text in <span>[<a href="#RFC8281" class="cite xref">RFC8281</a>]</span> as follows:<a href="#section-5-5" class="pilcrow">¶</a></p>
+<p id="section-5-6">"PCC <span class="bcp14">MUST</span> attempt to redelegate an orphaned LSP to a connected PCE by following the procedures of <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span> and in accordance
+with local policy."<a href="#section-5-6" class="pilcrow">¶</a></p>
+<p id="section-5-7">Mandating PCC-initiated redelegation establishes a single, interoperable behavior that both the PCC and any
+connected PCE can rely upon. While this mechanism does not inherently resolve scenarios where a PCE proactively
+requests delegation, it removes an open ambiguity in the base protocol. Furthermore, this specification does not
+preclude future extensions or impose constraints on alternative solutions.<a href="#section-5-7" class="pilcrow">¶</a></p>
 <div id="backwards-compatibility-2">
 <section id="section-5.1">
         <h3 id="name-backwards-compatibility-3">
@@ -1490,7 +1509,7 @@ PCC behavior. A PCE operates with the expectation that the PCC will initiate red
 legacy implementation that does not perform the redelegation, the PCE <span class="bcp14">MAY</span> apply local policy to decide when to revert
 to <span>[<a href="#RFC8281" class="cite xref">RFC8281</a>]</span> procedures and explicitly request delegation of orphaned LSPs.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 <p id="section-5.1-4">Capability Advertisement: A capability mechanism to indicate support for this document may be defined in a future revision.
-This capability is currently informational; it serves to notify the PCE that the PCC explicitly supports the mandated redelegation behavior.
+If defined, the capability is intended to be informational; it serves to notify the PCE that the PCC explicitly supports the mandated redelegation behavior.
 This allows the PCE to distinguish between a PCC that is expected to redelegate (per this document) and a legacy PCC,
 requiring the PCE to follow local policy and therefore <span class="bcp14">MAY</span> explicitly request delegation of orphaned LSPs.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
 </section>
@@ -1510,7 +1529,43 @@ requiring the PCE to follow local policy and therefore <span class="bcp14">MAY</
       <h2 id="name-managability-considerations">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-managability-considerations" class="section-name selfRef">Managability Considerations</a>
       </h2>
-<p id="section-7-1">TODO<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-1">This section provides operational guidance for deployments implementing the updates in this document.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<div id="stateful-bringup-1">
+<section id="section-7.1">
+        <h3 id="name-stateful-bringup-2">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-stateful-bringup-2" class="section-name selfRef">Stateful Bringup</a>
+        </h3>
+<p id="section-7.1-1">Implementations typically allow operators to configure which LSPs are reported to, and/or delegated to a PCE.
+This document does not change that configuration or its behavior. Some implementations may expose a configuration
+option that requires a PCReq before delegation (stateless bringup). When an operator migrates to stateful bringup,
+that option has no effect.  An implementation <span class="bcp14">MAY</span> deprecate the option or <span class="bcp14">MAY</span> instead treat it as selecting stateful bringup
+when delegation-related configuration is also present. Operators validating or monitoring PCEP operation <span class="bcp14">SHOULD</span> be aware that,
+after migration to stateful bringup,
+a PCRpt may arrive without a preceding PCReq for the same LSP.  This is valid behavior under this document
+and <span class="bcp14">SHOULD NOT</span> be treated as a protocol error.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-2">In the scenario involving mixed deployments where some PCCs use stateful bringup and others use stateless bringup, no special
+operation action is required.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sr-rro-omission">
+<section id="section-7.2">
+        <h3 id="name-sr-rro-omission">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-sr-rro-omission" class="section-name selfRef">SR RRO Omission</a>
+        </h3>
+<p id="section-7.2-1">During a staggered upgrade rollout operators <span class="bcp14">SHOULD</span> upgrade the PCE before the PCC, or, if available on the implementation,
+configure the PCC to continue sending the SR-RRO/SRv6-RRO until PCE support for ERO-only path reports is confirmed.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="orphaned-lsp-redelegation">
+<section id="section-7.3">
+        <h3 id="name-orphaned-lsp-redelegation">
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-orphaned-lsp-redelegation" class="section-name selfRef">Orphaned LSP Redelegation</a>
+        </h3>
+<p id="section-7.3-1">When operators are deploying backup or redundant PCEs, implementations <span class="bcp14">SHOULD</span> permit operations to configure
+an ordered list of PCEs to which the PCC maintains PCEP sessions with. When an LSP becomes orphaned, the implemenation
+PCC <span class="bcp14">MUST</span> attempt to redelegate to the next PCE in the ordered list that has an active PCEP session, following the procedures of <span>[<a href="#RFC8231" class="cite xref">RFC8231</a>]</span>.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="iana-considerations">

@@ -6,7 +6,7 @@ PCE Working Group                                         A. S. (Editor)
 Internet-Draft                                                     Nokia
 Updates: 8231, 8664, 8281 (if approved)                     M. Koldychev
 Intended status: Standards Track                            S. Sivabalan
-Expires: 30 August 2026                                            Ciena
+Expires: 28 December 2026                                          Ciena
                                                               D. Achavel
                                                                    Nokia
                                                                  S. Peng
@@ -15,7 +15,7 @@ Expires: 30 August 2026                                            Ciena
                                                    Juniper Networks, Inc
                                                                 S. Sidor
                                                                    Cisco
-                                                        26 February 2026
+                                                            26 June 2026
 
 
         Amendments to Stateful PCE Communication Protocol (PCEP)
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 August 2026.
+   This Internet-Draft will expire on 28 December 2026.
 
 Copyright Notice
 
@@ -72,6 +72,9 @@ Table of Contents
      5.1.  Backwards Compatibility
    6.  Security Considerations
    7.  Managability Considerations
+     7.1.  Stateful Bringup
+     7.2.  SR RRO Omission
+     7.3.  Orphaned LSP Redelegation
    8.  IANA Considerations
    9.  References
      9.1.  Normative References
@@ -176,7 +179,7 @@ Table of Contents
 
    The process of sending PCReq before PCRpt is referred to in this
    document as "stateless bringup".  In practice, stateless bringup
-   introduces overhead and the PcRpt sent from PCC cannot be enforced by
+   introduces overhead and the PCRpt sent from PCC cannot be enforced by
    the PCE, because a stateless PCE is not required to maintain any per-
    LSP state about previous PCReq messages.  It has been observed that
    many implementations choose to ignore this requirement and send the
@@ -187,7 +190,7 @@ Table of Contents
 
    The adoption of stateful PCE does not eliminate the utility of
    stateless PCEP.  A characteristic of stateless PCEP is that PCReq
-   messages does not require altering the LSP path state information in
+   messages do not require altering the LSP path state information in
    the PCE.  As a result, PCReq messages can be used in scenarios such
    as OAM functions (e.g., ping and traceroute), where it is necessary
    to probe the network topology without impacting existing LSPs and LSP
@@ -236,7 +239,7 @@ Table of Contents
          | PLSP-ID=100 | OLSP-ID=0, D-flag=1, OPER=DOWN, ERO={} |
          +-------------+----------------------------------------+
 
-               Table 1: Content of LSP DB after first PcRpt
+               Table 1: Content of LSP DB after first PCRpt
 
    PCC received a PCUpd from the PCE and has decided to install the
    ERO={A} from that PCUpd.  PCC sends PCRpt(R-FLAG=0, D-flag=1, OPER-
@@ -248,7 +251,7 @@ Table of Contents
           | PLSP-ID=100 | LSP-ID=0, D-flag=1, OPER=UP, ERO={A} |
           +-------------+--------------------------------------+
 
-                  Table 2: Content of LSP DB after PcUpd
+                  Table 2: Content of LSP DB after PCUpd
 
 3.2.  Backwards Compatibility
 
@@ -257,7 +260,7 @@ Table of Contents
    PCReq) for legacy PCCs.  Supporting stateful bringup does not require
    introducing new behavior on the PCE, since, as previously noted, a
    PCE implementation only modifies the conceptual PCRPT-LSP-DB state
-   based on PcRpt messages.  Therefore, regardless of whether a PCReq
+   based on PCRpt messages.  Therefore, regardless of whether a PCReq
    has been received, the PCE processes the PCRpt in the same manner.
 
 4.  Updates to RFC 8664 - Use of SR-RRO and SRv6-RRO objects
@@ -271,7 +274,7 @@ Table of Contents
    In practice RRO data is the result of signalling via a protocol such
    as RSVP-TE, which allows collection of per-hop information along the
    path.  The ERO and RRO values may be different as the path encoded in
-   the ERO may differ than the RRO such as during protection conditions
+   the ERO may differ from the RRO such as during protection conditions
    or if the ERO contains loose hops which are expanded upon.  As
    Segment Routing LSP does not perform any signalling, the values of an
    SR-ERO/SRv6-ERO and SR-RRO/SRv6-RRO (respectively) are in practice
@@ -317,12 +320,29 @@ Table of Contents
    unaware of the current delegation status of an LSP with respect to
    another PCE.
 
+   For example, when the PCE to which an LSP was delegated fails, the
+   PCC detects the loss of the PCEP session and the LSP becomes
+   orphaned.  A backup PCE with an active session to the same PCC cannot
+   know whether the PCC will redelegate the LSP or whether the backup
+   PCE should initiate the [RFC8281] procedure to request delegation.
+   Without clear guidance, backup PCE implementations may differ in
+   behavior, which can result in duplicate control attempts, delayed
+   takeover, or no takeover at all.
+
    To address this issue, this document updates the previously quoted
    text in [RFC8281] as follows:
 
    "PCC MUST attempt to redelegate an orphaned LSP to a connected PCE by
    following the procedures of [RFC8231] and in accordance with local
    policy."
+
+   Mandating PCC-initiated redelegation establishes a single,
+   interoperable behavior that both the PCC and any connected PCE can
+   rely upon.  While this mechanism does not inherently resolve
+   scenarios where a PCE proactively requests delegation, it removes an
+   open ambiguity in the base protocol.  Furthermore, this specification
+   does not preclude future extensions or impose constraints on
+   alternative solutions.
 
 5.1.  Backwards Compatibility
 
@@ -346,13 +366,13 @@ Table of Contents
    delegation of orphaned LSPs.
 
    Capability Advertisement: A capability mechanism to indicate support
-   for this document may be defined in a future revision.  This
-   capability is currently informational; it serves to notify the PCE
-   that the PCC explicitly supports the mandated redelegation behavior.
-   This allows the PCE to distinguish between a PCC that is expected to
-   redelegate (per this document) and a legacy PCC, requiring the PCE to
-   follow local policy and therefore MAY explicitly request delegation
-   of orphaned LSPs.
+   for this document may be defined in a future revision.  If defined,
+   the capability is intended to be informational; it serves to notify
+   the PCE that the PCC explicitly supports the mandated redelegation
+   behavior.  This allows the PCE to distinguish between a PCC that is
+   expected to redelegate (per this document) and a legacy PCC,
+   requiring the PCE to follow local policy and therefore MAY explicitly
+   request delegation of orphaned LSPs.
 
 6.  Security Considerations
 
@@ -361,7 +381,43 @@ Table of Contents
 
 7.  Managability Considerations
 
-   TODO
+   This section provides operational guidance for deployments
+   implementing the updates in this document.
+
+7.1.  Stateful Bringup
+
+   Implementations typically allow operators to configure which LSPs are
+   reported to, and/or delegated to a PCE.  This document does not
+   change that configuration or its behavior.  Some implementations may
+   expose a configuration option that requires a PCReq before delegation
+   (stateless bringup).  When an operator migrates to stateful bringup,
+   that option has no effect.  An implementation MAY deprecate the
+   option or MAY instead treat it as selecting stateful bringup when
+   delegation-related configuration is also present.  Operators
+   validating or monitoring PCEP operation SHOULD be aware that, after
+   migration to stateful bringup, a PCRpt may arrive without a preceding
+   PCReq for the same LSP.  This is valid behavior under this document
+   and SHOULD NOT be treated as a protocol error.
+
+   In the scenario involving mixed deployments where some PCCs use
+   stateful bringup and others use stateless bringup, no special
+   operation action is required.
+
+7.2.  SR RRO Omission
+
+   During a staggered upgrade rollout operators SHOULD upgrade the PCE
+   before the PCC, or, if available on the implementation, configure the
+   PCC to continue sending the SR-RRO/SRv6-RRO until PCE support for
+   ERO-only path reports is confirmed.
+
+7.3.  Orphaned LSP Redelegation
+
+   When operators are deploying backup or redundant PCEs,
+   implementations SHOULD permit operations to configure an ordered list
+   of PCEs to which the PCC maintains PCEP sessions with.  When an LSP
+   becomes orphaned, the implemenation PCC MUST attempt to redelegate to
+   the next PCE in the ordered list that has an active PCEP session,
+   following the procedures of [RFC8231].
 
 8.  IANA Considerations
 
