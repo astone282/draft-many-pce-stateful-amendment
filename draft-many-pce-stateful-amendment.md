@@ -274,8 +274,8 @@ To address this issue, this document updates the previously quoted text in [RFC8
 "PCC MUST attempt to redelegate an orphaned LSP to a connected PCE by following the procedures of [RFC8231] and in accordance
 with local policy."
 
-Mandating PCC-initiated redelegation establishes a single, interoperable behavior that both the PCC and any 
-connected PCE can rely upon. While this mechanism does not inherently resolve scenarios where a PCE proactively 
+Mandating PCC-initiated redelegation establishes a single, interoperable behavior that both the PCC and any
+connected PCE can rely upon. While this mechanism does not inherently resolve scenarios where a PCE proactively
 requests delegation, it removes an open ambiguity in the base protocol. Furthermore, this specification does not
 preclude future extensions or impose constraints on alternative solutions.
 
@@ -309,10 +309,10 @@ This section provides operational guidance for deployments implementing the upda
 ## Stateful Bringup
 
 Implementations typically allow operators to configure which LSPs are reported to, and/or delegated to a PCE.
-This document does not change that configuration or its behavior. Some implementations may expose a configuration 
-option that requires a PCReq before delegation (stateless bringup). When an operator migrates to stateful bringup, 
-that option has no effect.  An implementation MAY deprecate the option or MAY instead treat it as selecting stateful bringup 
-when delegation-related configuration is also present. Operators validating or monitoring PCEP operation SHOULD be aware that, 
+This document does not change that configuration or its behavior. Some implementations may expose a configuration
+option that requires a PCReq before delegation (stateless bringup). When an operator migrates to stateful bringup,
+that option has no effect.  An implementation MAY deprecate the option or MAY instead treat it as selecting stateful bringup
+when delegation-related configuration is also present. Operators validating or monitoring PCEP operation SHOULD be aware that,
 after migration to stateful bringup,
 a PCRpt may arrive without a preceding PCReq for the same LSP.  This is valid behavior under this document
 and SHOULD NOT be treated as a protocol error.
@@ -323,11 +323,11 @@ operation action is required.
 ## SR RRO Omission
 
 During a staggered upgrade rollout operators SHOULD upgrade the PCE before the PCC, or, if available on the implementation,
-configure the PCC to continue sending the SR-RRO/SRv6-RRO until PCE support for ERO-only path reports is confirmed. 
+configure the PCC to continue sending the SR-RRO/SRv6-RRO until PCE support for ERO-only path reports is confirmed.
 
 ## Orphaned LSP Redelegation
 
-When operators are deploying backup or redundant PCEs, implementations SHOULD permit operations to configure 
+When operators are deploying backup or redundant PCEs, implementations SHOULD permit operations to configure
 an ordered list of PCEs to which the PCC maintains PCEP sessions with. When an LSP becomes orphaned, the implemenation
 PCC MUST attempt to redelegate to the next PCE in the ordered list that has an active PCEP session, following the procedures of [RFC8231].
 
