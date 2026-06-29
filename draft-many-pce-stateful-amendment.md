@@ -27,7 +27,7 @@ author:
     organization: Ciena
     email: ssivabal@ciena.com
 -
-    fullname: Diego Achavel
+    fullname: Diego Achaval
     organization: Nokia
     email: diego.achaval@nokia.com
 -
@@ -48,14 +48,14 @@ normative:
     RFC8231:
     RFC8664:
     RFC8281:
+    RFC9603:
 
 informative:
     I-D.draft-koldychev-pce-operational:
-    RFC9603:
 
 --- abstract
 
-This document updates RFC8231, RFC8664 and RFC8281 to reflect operationalized implementations and define optimizations in the PCEP protocol.
+This document updates RFC8231, RFC8664 and RFC8281 to reflect operationalized implementations and defines optimizations in the PCEP protocol.
 
 --- middle
 
@@ -96,19 +96,6 @@ MBB:  Make-Before-Break.  A procedure during which the head-end of a
 traffic-engineered path wishes to move traffic to a new path
 without losing any traffic, by first "making" a new path and then
 "breaking" the old path.
-
-Association parameters:  As described in [RFC8697], the combination
-of the mandatory fields Association type, Association ID and
-Association Source in the ASSOCIATION object uniquely identify the
-association group.  If the optional TLVs - Global Association
-Source or Extended Association ID are included, then they are
-included in combination with mandatory fields to uniquely identify
-the association group.
-
-Association information:  As described in [RFC8697], the ASSOCIATION
-object could also include other optional TLVs based on the
-association types, that provides 'information' related to the
-association type.
 
 ERO: Explicit Route Object is the path of the LSP encoded into a PCEP object.
 In this document, an empty ERO object, i.e., without any subobjects,
@@ -185,24 +172,24 @@ starts by using an LSP-ID of 0. The value 0 does not hold any
 special meaning; any other 16-bit value could have been used.
 
 PCC has no LSP yet, but wants to establish a path.  PCC sends
-PCRpt(R-FLAG=0, D-flag=1, OPER-FLAG=DOWN, PLSP-ID=100, LSP-ID=0,
+PCRpt(R-FLAG=0, D-FLAG=1, OPER-FLAG=DOWN, PLSP-ID=100, LSP-ID=0,
 ERO={}).
 
 | TUNNEL      | LSP                                    |
 | :---        | :----:                                 |
-| PLSP-ID=100 | OLSP-ID=0, D-flag=1, OPER=DOWN, ERO={} |
+| PLSP-ID=100 | LSP-ID=0, D-FLAG=1, OPER=DOWN, ERO={} |
 {: title="Content of LSP DB after first PCRpt"}
 
 PCC received a PCUpd from the PCE and has decided to install the
-ERO={A} from that PCUpd.  PCC sends PCRpt(R-FLAG=0, D-flag=1, OPER-
+ERO={A} from that PCUpd.  PCC sends PCRpt(R-FLAG=0, D-FLAG=1, OPER-
 FLAG=UP, PLSP-ID=100, LSP-ID=0, ERO={A}).
 
 | TUNNEL      | LSP                                    |
 | :---        | :----:                                 |
-| PLSP-ID=100 | LSP-ID=0, D-flag=1, OPER=UP, ERO={A}   |
+| PLSP-ID=100 | LSP-ID=0, D-FLAG=1, OPER=UP, ERO={A}   |
 {: title="Content of LSP DB after PCUpd"}
 
-## Backwards Compatibility
+## Backward Compatibility
 
 The stateful bringup mechanism is compatible with legacy PCEP implementations.
 The PCE continues to support stateless bringup (via PCReq) for legacy PCCs.
@@ -219,18 +206,18 @@ known as the ERO object and `<actual-path>` known as the RRO object.
 [RFC9603] further defines SRv6-ERO and
 SRv6-RRO sub-objects for SRv6-TE paths.
 
-In practice RRO data is the result of signalling via a protocol such
+In practice RRO data is the result of signaling via a protocol such
 as RSVP-TE, which allows collection of per-hop information along the
 path.  The ERO and RRO values may be different as the path encoded in
 the ERO may differ from the RRO such as during protection conditions
-or if the ERO contains loose hops which are expanded upon.  As
-Segment Routing LSP does not perform any signalling, the values of an
+or if the ERO contains loose hops which are expanded upon.  As a
+Segment Routing LSP does not perform any signaling, the values of an
 SR-ERO/SRv6-ERO and SR-RRO/SRv6-RRO (respectively) are in practice
 the same, therefore some implementations have omitted the RRO when
 reporting a SR-TE LSP while others continue to send both ERO and RRO
 values.
 
-This document updates [RFC8664] by clarifying and relaxing requirement for
+This document updates [RFC8664] by clarifying and relaxing the requirement for
 both an ERO and RRO object to exist for SR-TE paths. If both ERO and RRO are present
 for the same LSP, it SHOULD be interpreted as the RRO being the
 actual path the LSP is taking but MAY interpret only the ERO as the
@@ -239,15 +226,15 @@ the actual path for the LSP.  Until SR-TE introduces some form of
 signaling similar to RSVP-TE, the use of RRO is discouraged for SR-TE
 LSPs.
 
-## Backwards Compatibility
+## Backward Compatibility
 
 The update to [RFC8664] permitting PCC to omit carrying SR-RRO/SRv6-RRO may create interoperability
 problems between different implementations of newer PCC and a legacy PCE. It is possible that an implementation of PCE
-which requires reading the SR-RRO/SRv6-RRO, may result with incomplete data processing on the PCE for the LSP.
+which requires reading the SR-RRO/SRv6-RRO, may result in incomplete data processing on the PCE for the LSP.
 However, as this document is attempting to reflect operationalized implementations, PCE implementations
 are likely already capable of falling back to processing the SR-ERO/SRv6-ERO objects.
 
-# Updates to RFC 8281 - Orphaned LSP without delegation
+# Updates to RFC 8231 and RFC 8281 - Orphaned LSP redelegation
 
 [RFC8281] Section 6, describes two mechanisms for handling the case when an LSP becomes orphaned.
 The relevant text is as follows:
@@ -255,38 +242,54 @@ The relevant text is as follows:
 "The PCC MAY attempt to redelegate an orphaned LSP by following the procedures of [RFC8231].
 Alternatively, if the orphaned LSP was PCE-initiated, then a PCE MAY obtain control over it, as follows"
 
+The first mechanism is based on the redelegation procedures defined in
+[RFC8231] Section 5.7.5.  [RFC8231] describes how delegation returns to the
+PCC after the Redelegation Timeout Interval expires, and how the LSP may be
+redelegated to another PCE.  In the standby-PCE case, [RFC8231] also allows
+the Redelegation Timeout Interval to be set to 0, causing the LSP to be
+redelegated immediately to the standby PCE.  This document updates that
+behavior by making the PCC attempt to redelegate an orphaned LSP.
+
 The second mechanism goes on to describe the messaging procedures by
-which a PCE may obtain control of an orphaned PCE-initiated LSP. However, the document does not define
-how a PCE determines whether a PCC expects it to take action
-to obtain control, nor does it specify when such action should be taken. This
-ambiguity is problematic in deployments with backup or redundant PCEs,
-as a PCE may be completely unaware of the current delegation status of an LSP
-with respect to another PCE.
+which a PCE may obtain control of an orphaned PCE-initiated LSP. However,
+[RFC8281] does not define how a PCE determines whether a PCC expects it to
+take action to obtain control, nor does it specify when such action should
+be taken. This ambiguity is problematic in deployments with backup or
+redundant PCEs, as a PCE may be unaware of the current delegation status of
+an LSP with respect to another PCE.
 
-For example, when the PCE to which an LSP was delegated fails, the PCC detects the loss of the PCEP
-session and the LSP becomes orphaned.  A backup PCE with an active session to the same PCC cannot know
-whether the PCC will redelegate the LSP or whether the backup PCE should initiate the [RFC8281] procedure
-to request delegation.  Without clear guidance, backup PCE implementations may differ in behavior,
-which can result in duplicate control attempts, delayed takeover, or no takeover at all.
+For example, when the PCE to which an LSP was delegated fails, the PCC
+detects the loss of the PCEP session. After the Redelegation Timeout
+Interval expires, delegation returns to the PCC and the LSP becomes
+orphaned until the State Timeout Interval expires. A backup PCE with an
+active session to the same PCC cannot know whether the PCC will redelegate
+the LSP or whether the backup PCE should initiate the [RFC8281] procedure
+to request delegation. Without clear guidance, backup PCE implementations
+may differ in behavior, which can result in duplicate control attempts,
+delayed takeover, or no takeover at all.
 
-To address this issue, this document updates the previously quoted text in [RFC8281] as follows:
+To address this issue, this document updates [RFC8231] Section 5.7.5 and
+the previously quoted text in [RFC8281] as follows:
 
-"PCC MUST attempt to redelegate an orphaned LSP to a connected PCE by following the procedures of [RFC8231] and in accordance
-with local policy."
+"PCC MUST attempt to redelegate an orphaned LSP to a connected PCE by
+following the procedures of [RFC8231] and in accordance with local policy."
 
-Mandating PCC-initiated redelegation establishes a single, interoperable behavior that both the PCC and any
-connected PCE can rely upon. While this mechanism does not inherently resolve scenarios where a PCE proactively
-requests delegation, it removes an open ambiguity in the base protocol. Furthermore, this specification does not
-preclude future extensions or impose constraints on alternative solutions.
+Mandating PCC-initiated redelegation establishes a single, interoperable
+behavior that both the PCC and any connected PCE can rely upon. This
+document does not deprecate the [RFC8281] procedure by which a PCE
+explicitly requests delegation of an orphaned PCE-initiated LSP. A PCE MAY
+apply local policy to decide when to use that procedure, for example when
+the PCC is a legacy implementation that does not redelegate the orphaned
+LSP. Furthermore, this specification does not preclude future extensions or
+impose constraints on alternative solutions.
 
-## Backwards Compatibility
+## Backward Compatibility
 
-The update to [RFC8281] mandating that a PCC MUST attempt to redelegate orphaned LSPs introduces considerations
-for interoperability between updated and legacy implementations.
+The updates to [RFC8231] and [RFC8281] mandating that a PCC MUST attempt to redelegate orphaned LSPs introduce considerationsfor interoperability between updated and legacy implementations.
 
 PCC Perspective: A PCC implementing this document MUST attempt to redelegate orphaned LSPs to an active PCE.
 From the perspective of a legacy PCE, these redelegations will appear as standard [RFC8231] procedures.
-Since legacy PCEs are already capable of processing redelegation of LSPs driven from PCC, this update is backwards compatible.
+Since legacy PCEs are already capable of processing redelegation of LSPs driven from PCC, this update is backward compatible.
 
 PCE Perspective: For a PCE implementing this document, the primary change is the shift in expectation regarding
 PCC behavior. A PCE operates with the expectation that the PCC will initiate redelegation. However, if the PCC is a
@@ -298,11 +301,7 @@ If defined, the capability is intended to be informational; it serves to notify 
 This allows the PCE to distinguish between a PCC that is expected to redelegate (per this document) and a legacy PCC,
 requiring the PCE to follow local policy and therefore MAY explicitly request delegation of orphaned LSPs.
 
-# Security Considerations
-
-The security considerations described in [RFC8231], [RFC8281] and [RFC8664] apply to this document.
-
-# Managability Considerations
+# Operational Considerations
 
 This section provides operational guidance for deployments implementing the updates in this document.
 
@@ -317,9 +316,6 @@ after migration to stateful bringup,
 a PCRpt may arrive without a preceding PCReq for the same LSP.  This is valid behavior under this document
 and SHOULD NOT be treated as a protocol error.
 
-In the scenario involving mixed deployments where some PCCs use stateful bringup and others use stateless bringup, no special
-operation action is required.
-
 ## SR RRO Omission
 
 During a staggered upgrade rollout operators SHOULD upgrade the PCE before the PCC, or, if available on the implementation,
@@ -327,10 +323,14 @@ configure the PCC to continue sending the SR-RRO/SRv6-RRO until PCE support for 
 
 ## Orphaned LSP Redelegation
 
-When operators are deploying backup or redundant PCEs, implementations SHOULD permit operations to configure
-an ordered list of PCEs to which the PCC maintains PCEP sessions with. When an LSP becomes orphaned, the implemenation
-PCC MUST attempt to redelegate to the next PCE in the ordered list that has an active PCEP session, following the procedures of [RFC8231].
+When operators are deploying backup or redundant PCEs, implementations SHOULD permit operators to configure a local policy
+which controls the behavior of orphaned LSP redelegation. One example of a local policy is an ordered list of PCEs to
+which the PCC maintains PCEP sessions with and when an LSP becomes orphaned, the policy is followed to redelegate
+to the next PCE in the ordered list that has an active PCEP session.
 
+# Security Considerations
+
+The security considerations described in [RFC8231], [RFC8281] and [RFC8664] apply to this document.
 
 # IANA Considerations
 
