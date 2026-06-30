@@ -4,9 +4,9 @@
 
 PCE Working Group                                         A. S. (Editor)
 Internet-Draft                                                     Nokia
-Updates: 8231, 8664, 8281 (if approved)                     M. Koldychev
+Updates: 8231, 8664, 8281, 9603 (if approved)               M. Koldychev
 Intended status: Standards Track                            S. Sivabalan
-Expires: 31 December 2026                                          Ciena
+Expires: 1 January 2027                                            Ciena
                                                               D. Achaval
                                                                    Nokia
                                                                  S. Peng
@@ -15,7 +15,7 @@ Expires: 31 December 2026                                          Ciena
                                                    Juniper Networks, Inc
                                                                 S. Sidor
                                                                    Cisco
-                                                            29 June 2026
+                                                            30 June 2026
 
 
         Amendments to Stateful PCE Communication Protocol (PCEP)
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 December 2026.
+   This Internet-Draft will expire on 1 January 2027.
 
 Copyright Notice
 
@@ -347,7 +347,7 @@ Table of Contents
 5.1.  Backward Compatibility
 
    The updates to [RFC8231] and [RFC8281] mandating that a PCC MUST
-   attempt to redelegate orphaned LSPs introduce considerationsfor
+   attempt to redelegate orphaned LSPs introduce considerations for
    interoperability between updated and legacy implementations.
 
    PCC Perspective: A PCC implementing this document MUST attempt to
