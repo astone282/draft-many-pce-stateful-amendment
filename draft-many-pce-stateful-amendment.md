@@ -4,7 +4,7 @@ abbrev: "PCEP-STATEFUL-AMEND"
 category: std
 
 docname: draft-many-pce-stateful-amendment-latest
-updates: 8231, 8664, 8281
+updates: 8231, 8664, 8281, 9603
 submissiontype: IETF
 number:
 date: {DATE}
@@ -285,7 +285,8 @@ impose constraints on alternative solutions.
 
 ## Backward Compatibility
 
-The updates to [RFC8231] and [RFC8281] mandating that a PCC MUST attempt to redelegate orphaned LSPs introduce considerationsfor interoperability between updated and legacy implementations.
+The updates to [RFC8231] and [RFC8281] mandating that a PCC MUST attempt to redelegate orphaned LSPs introduce considerations for 
+interoperability between updated and legacy implementations.
 
 PCC Perspective: A PCC implementing this document MUST attempt to redelegate orphaned LSPs to an active PCE.
 From the perspective of a legacy PCE, these redelegations will appear as standard [RFC8231] procedures.
