@@ -285,7 +285,7 @@ impose constraints on alternative solutions.
 
 ## Backward Compatibility
 
-The updates to [RFC8231] and [RFC8281] mandating that a PCC MUST attempt to redelegate orphaned LSPs introduce considerations for 
+The updates to [RFC8231] and [RFC8281] mandating that a PCC MUST attempt to redelegate orphaned LSPs introduce considerations for
 interoperability between updated and legacy implementations.
 
 PCC Perspective: A PCC implementing this document MUST attempt to redelegate orphaned LSPs to an active PCE.
